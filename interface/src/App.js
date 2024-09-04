@@ -2,9 +2,10 @@ import React, { useEffect, useState } from 'react';
 
 function App() {
     const [data, setData] = useState(null);
+    const apiUrl = process.env.REACT_APP_API_URL || '';
 
     useEffect(() => {
-        fetch('/extract_params', {
+        fetch(`${apiUrl}/extract_params`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -13,7 +14,7 @@ function App() {
         })
         .then(response => response.json())
         .then(data => setData(data));
-    }, []);
+    }, [apiUrl]);
 
     return (
         <div className="App">
