@@ -54,16 +54,16 @@ def create_app():
     )
 
     # if tmp folder doesn't exist, create it
-    if not os.path.exists("tmpData/"):
-        os.mkdir("tmpData/")
+    if not os.path.exists("api/tmpData/"):
+        os.mkdir("api/tmpData/")
 
     # if error_logs folder doesn't exist, create it
-    if not os.path.exists("error_logs/"):
-        os.mkdir("error_logs/")
+    if not os.path.exists("api/error_logs/"):
+        os.mkdir("api/error_logs/")
 
     # if data folder doesn't exist, create it
-    if not os.path.exists("projectData/"):
-        os.mkdir("projectData/")
+    if not os.path.exists("api/projectData/"):
+        os.mkdir("api/projectData/")
 
     # Register blueprints
     app.register_blueprint(main.bp)
