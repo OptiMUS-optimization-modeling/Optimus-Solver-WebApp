@@ -27,9 +27,11 @@ origins = [
 ]
 
 
+
+
 def create_app():
     app = Flask(__name__)
-
+    
     # Apply CORS to the Flask app for all routes
     CORS(app, origins=origins, supports_credentials=True)
 
@@ -37,8 +39,8 @@ def create_app():
     app.config.from_object("config.Config")
 
     # Print all items of config
-    for key, value in app.config.items():
-        print(f"{key}: {value}")
+    # for key, value in app.config.items():
+    #     print(f"{key}: {value}")
 
     # Load clients
     app.clients = get_clients(app.config)
