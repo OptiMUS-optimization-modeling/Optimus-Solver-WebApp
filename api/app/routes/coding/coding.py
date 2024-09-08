@@ -1,4 +1,4 @@
-variable_definition_prompt_templates = """
+variable_definition_prompt_templates = r"""
 You're an expert programmer in a team of optimization experts. The goal of the team is to solve an optimization problem. Your task is to write {solver} code for defining variables of the problem. Here's a variable we need you to write the code for defining:
 
 -----
@@ -26,7 +26,7 @@ buy = model.addVars(I, M, vtype=gp.GRB.CONTINUOUS, name="buy")
 
 """
 
-main_prompt_template = """
+main_prompt_template = r"""
 You're an expert programmer in a team of optimization experts. The goal of the team is to solve an optimization problem. Your task is to write {solver} code for the {targetType} of the problem.
 
 Here's the {targetType} we need you to write the code for, along with the list of related variables and parameters:
@@ -44,7 +44,7 @@ Only generate the code, and don't generate any other text. Take a deep breath, a
 """
 
 examples = {
-    "objective": """
+    "objective": r"""
 **input**:
 
 {{
@@ -95,7 +95,7 @@ m.setObjective(quicksum(profit[k] * x[k, i] - storeCost * s[k, i] for k in range
 =====
 
 """,
-    "constraint": """
+    "constraint": r"""
 
 **input**:
 
