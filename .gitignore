@@ -1,2 +1,4 @@
 .venv/
 interface/node_modules
+api/.env
+interface/.env

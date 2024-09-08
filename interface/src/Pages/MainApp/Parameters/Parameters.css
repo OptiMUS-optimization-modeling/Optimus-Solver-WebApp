@@ -1,0 +1,30 @@
+/* styles.css */
+.indexColumn {
+    width: 20%;
+  }
+  
+  .shapeColumn {
+    width: 10%;
+  }
+  
+  .definitionColumn {
+    max-width: 70%;
+  }
+
+  .statusColumn {
+    width: 25%;
+  }
+  
+  .fullWidthInput {
+    width: 100%;
+  }
+  
+  .table-container {
+    max-height: 30vh; /* Adjust this value as per your requirement */
+    overflow-y: auto;
+  }
+
+  .actionColumn {
+    width: 5%;
+    margin: auto;
+  }

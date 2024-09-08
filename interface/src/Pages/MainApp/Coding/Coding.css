@@ -1,0 +1,26 @@
+/* styles.css */
+.indexColumn {
+    width: 15%;
+  }
+
+  .shapeColumn {
+    width: 10%;
+  }
+  
+  .definitionColumn {
+    width: 70%;
+  }
+
+  .actionColumn {
+    width: 5%;
+  }
+  
+  .fullWidthInput {
+    width: 100%;
+  }
+  
+  .table-container {
+    max-height: 30vh; /* Adjust this value as per your requirement */
+    overflow-y: auto;
+  }
+

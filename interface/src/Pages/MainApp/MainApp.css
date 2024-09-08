@@ -1,0 +1,21 @@
+
+.drawer-side {
+    max-height: 93vh;
+    overflow-y: auto;
+}
+
+/* set max height to 93vh and enable scrolling. Stick to the top of the page, under the header */
+.content-window {
+    overflow-y: auto;   
+    max-height: 93vh;   
+}
+
+/* stick it to the top of the page behind the header */
+.main-content {
+    position: fixed;
+    width: 100%;
+    z-index: 80;
+    overflow-y: auto;
+    max-height: 93vh;
+}
+

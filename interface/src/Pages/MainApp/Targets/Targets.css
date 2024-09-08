@@ -1,0 +1,30 @@
+/* styles.css */
+.indexColumn {
+    width: 5%;
+  }
+  
+  
+  .definitionColumn {
+    width: 50%;
+  }
+
+  .actionColumn {
+    width: 10%;
+  }
+
+  .fullWidthInput {
+    width: 100%;
+  }
+  
+  .table-container {
+    max-height: 30vh; /* Adjust this value as per your requirement */
+    overflow-y: auto;
+  }
+
+  .objective-text {
+    width: 90%;
+  }
+
+  .background-text {
+    width: 90%;
+  }

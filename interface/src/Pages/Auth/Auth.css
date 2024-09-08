@@ -1,0 +1,13 @@
+.form-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 70%;
+    margin-top: 60px; /* Space for the header */
+    flex-direction: column; /* Add this line */
+}
+
+/* make the border that already exists because of other classes thicker */
+.card {
+    box-shadow: 0px 0px 0px 1px rgba(0, 0, 0, 0.1);
+}

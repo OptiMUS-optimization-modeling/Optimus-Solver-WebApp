@@ -1,0 +1,15 @@
+
+.footer-class {
+    margin-left: 0em;
+    margin-right: 0em;
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    z-index: 100;
+}
+
+
+.footer-divider {
+    margin-left: 5vw;
+    margin-right: 5vw;
+}
