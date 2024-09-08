@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 
 function Dashboard({ user, isDark, setIsDark }) {
@@ -9,7 +9,7 @@ function Dashboard({ user, isDark, setIsDark }) {
   const [deleteProjectId, setDeleteProjectId] = useState("");
 
   // fetchProjects
-  const fetchProjects = async () => {
+  const fetchProjects = useCallback(async () => {
     try {
       fetch(process.env.REACT_APP_BACKEND_URL + "/projects/getList", {
         method: "POST",
@@ -34,12 +34,12 @@ function Dashboard({ user, isDark, setIsDark }) {
     } catch (error) {
       console.error("Error fetching projects:", error);
     }
-  };
+  }, [navigate]);
 
   // setProjects
   useEffect(() => {
     fetchProjects();
-  }, []);
+  }, [fetchProjects]);
 
   const handleProjectClick = (project_id) => {
     navigate("/project/" + project_id);
