@@ -1,1 +1,1 @@
-   web: gunicorn -w 4 -b 0.0.0.0:5000 "api.app:create_app()"
+   web: gunicorn -w 3 -b 0.0.0.0:$PORT "api.app:create_app()"
