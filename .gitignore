@@ -2,4 +2,4 @@
 interface/node_modules
 api/.env
 interface/.env
-.flaskenv
+.env
