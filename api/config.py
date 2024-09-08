@@ -6,3 +6,4 @@ class Config:
     API_URL = os.environ.get('API_URL')
     OPENAI_API_KEY = os.environ.get('OPENAI_API_KEY')
     ANTHROPIC_API_KEY = os.environ.get('ANTHROPIC_API_KEY')
+    FIREBASE_CREDENTIALS = os.environ.get('FIREBASE_CREDENTIALS')

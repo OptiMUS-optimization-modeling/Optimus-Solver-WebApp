@@ -2,8 +2,8 @@ import json
 from flask import Blueprint, current_app, request, jsonify, session
 import time
 
-from app.utils.misc import get_unique_id
-from app.routes.auth.auth import login_required, check_project_ownership
+from api.app.utils.misc import get_unique_id
+from api.app.routes.auth.auth import login_required, check_project_ownership
 
 bp = Blueprint("scan_parameters", __name__)
 

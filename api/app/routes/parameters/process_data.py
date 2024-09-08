@@ -1,7 +1,7 @@
 from flask import Blueprint, request, jsonify, current_app
 import json
 import numpy as np
-from app.routes.auth.auth import login_required
+from api.app.routes.auth.auth import login_required
 
 
 bp = Blueprint("process_data", __name__)

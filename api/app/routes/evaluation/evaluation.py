@@ -70,8 +70,8 @@ import os
 import threading
 
 
-from app.utils.communication import get_llm_response, process_with_retries
-from app.routes.auth.auth import login_required, check_project_ownership
+from api.app.utils.communication import get_llm_response, process_with_retries
+from api.app.routes.auth.auth import login_required, check_project_ownership
 
 
 bp = Blueprint("eval", __name__)

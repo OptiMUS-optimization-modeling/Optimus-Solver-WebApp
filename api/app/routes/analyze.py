@@ -97,9 +97,9 @@ import time
 import threading
 
 
-from app.utils.misc import get_unique_id
-from app.utils.communication import get_llm_response, process_with_retries
-from app.routes.auth.auth import login_required
+from api.app.utils.misc import get_unique_id
+from api.app.utils.communication import get_llm_response, process_with_retries
+from api.app.routes.auth.auth import login_required
 
 bp = Blueprint("analyze", __name__)
 

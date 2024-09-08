@@ -1,6 +1,6 @@
 from flask import Blueprint, current_app
 from flask import request, jsonify
-from app.routes.auth.auth import login_required
+from api.app.routes.auth.auth import login_required
 
 bp = Blueprint("misc", __name__)
 

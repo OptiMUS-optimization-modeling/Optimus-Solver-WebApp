@@ -3,7 +3,7 @@ from flask import request, jsonify
 from flask import session
 from flask import redirect, url_for
 
-from app.routes.auth.auth import login_required
+from api.app.routes.auth.auth import login_required
 
 bp = Blueprint("main", __name__)
 

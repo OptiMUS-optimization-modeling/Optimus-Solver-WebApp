@@ -36,7 +36,7 @@ def create_app():
     CORS(app, origins=origins, supports_credentials=True)
 
     # Load config
-    app.config.from_object("config.Config")
+    app.config.from_object("api.config.Config")
 
     # Print all items of config
     # for key, value in app.config.items():

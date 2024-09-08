@@ -1,7 +1,7 @@
 from flask import Flask, jsonify, request, session, Blueprint, current_app
 from firebase_admin import auth
 from functools import wraps
-from app.routes.auth.auth import login_required, check_project_ownership
+from api.app.routes.auth.auth import login_required, check_project_ownership
 from google.cloud import firestore
 
 # Assuming Firebase Admin is initialized elsewhere in your application
