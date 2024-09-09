@@ -30,7 +30,6 @@ origins = [
 
 
 def create_app():
-    print('ZZZZZZZZZ: ', os.path.abspath('./interface/build'))
     app = Flask(__name__, 
                 static_folder=os.path.abspath('./interface/build'), 
                 template_folder=os.path.abspath('./interface/build'))
@@ -40,10 +39,6 @@ def create_app():
 
     # Load config
     app.config.from_object("api.config.Config")
-
-    # Print all items of config
-    # for key, value in app.config.items():
-    #     print(f"{key}: {value}")
 
     # Load clients
     app.clients = get_clients(app.config)
@@ -89,8 +84,12 @@ def create_app():
 
     @app.route('/<path:path>')
     def serve_static(path):
-        print(f"Serving {path} from {app.static_folder}")
-        return send_from_directory(app.static_folder, path)
+        if os.path.exists(os.path.join(app.static_folder, path)):
+            print(f"Serving {path} from {app.static_folder}")
+            return send_from_directory(app.static_folder, path)
+        else:
+            print(f"Path {path} not found. Serving index.html from {app.static_folder}")
+            return send_from_directory(app.static_folder, 'index.html')
 
         
     return app

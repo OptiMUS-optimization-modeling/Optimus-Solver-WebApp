@@ -1,5 +1,10 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
+import {
+  fetchProjects,
+  createProject,
+  deleteProject,
+} from "../../Services/api";
 
 function Dashboard({ user, isDark, setIsDark }) {
   // get the list of projects on page load
@@ -9,89 +14,39 @@ function Dashboard({ user, isDark, setIsDark }) {
   const [deleteProjectId, setDeleteProjectId] = useState("");
 
   // fetchProjects
-  const fetchProjects = useCallback(async () => {
-    try {
-      fetch(process.env.REACT_APP_BACKEND_URL + "/projects/getList", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        credentials: "include",
-      })
-        .then((response) => {
-          if (response.status === 401) {
-            navigate("/login");
-            return;
-          }
-          return response.json();
-        })
-        .then((data) => {
-          if (data) {
-            console.log("Projects:", data["projects"]);
-            setProjects(data["projects"]);
-          }
-        });
-    } catch (error) {
-      console.error("Error fetching projects:", error);
+  const fetchProjectsCallback = useCallback(async () => {
+    const projects = await fetchProjects(navigate);
+    if (projects) {
+      console.log("Projects:", projects);
+      setProjects(projects);
     }
   }, [navigate]);
 
   // setProjects
   useEffect(() => {
-    fetchProjects();
-  }, [fetchProjects]);
+    fetchProjectsCallback();
+  }, [fetchProjectsCallback]);
 
   const handleProjectClick = (project_id) => {
     navigate("/project/" + project_id);
   };
 
-  const handleCreateProject = () => {
+  const handleCreateProject = async () => {
     console.log("Creating new project...");
-    // send a request to create a new project
-    // then fetch the updated list of projects
     try {
-      fetch(process.env.REACT_APP_BACKEND_URL + "/projects/createProject", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        credentials: "include",
-        body: JSON.stringify({
-          title: newProjectTitle,
-        }),
-      })
-        .then((response) => response.json())
-        .then((data) => {
-          console.log("New Project:", data);
-          fetchProjects();
-        });
+      await createProject(newProjectTitle);
+      fetchProjectsCallback();
     } catch (error) {
-      console.error("Error creating new project:", error);
       alert("Error creating new project!");
     }
   };
 
-  const deleteProject = (project_id) => {
+  const handleDeleteProject = async (project_id) => {
     console.log("Deleting project:", project_id);
-    // send a request to delete the project
-    // then fetch the updated list of projects
     try {
-      fetch(process.env.REACT_APP_BACKEND_URL + "/projects/deleteProject", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        credentials: "include",
-        body: JSON.stringify({
-          project_id: project_id,
-        }),
-      })
-        .then((response) => response.json())
-        .then((data) => {
-          console.log("Delete Project:", data);
-          fetchProjects();
-          document.getElementById("delete_confirm_modal").close();
-        });
+      await deleteProject(project_id);
+      fetchProjectsCallback();
+      document.getElementById("delete_confirm_modal").close();
     } catch (error) {
       console.error("Error deleting project:", error);
     }
@@ -208,7 +163,7 @@ function Dashboard({ user, isDark, setIsDark }) {
             onSubmit={(e) => {
               e.preventDefault();
               console.log("Deleting project...");
-              deleteProject(deleteProjectId);
+              handleDeleteProject(deleteProjectId);
             }}
           >
             <div className="form-control">
@@ -216,7 +171,7 @@ function Dashboard({ user, isDark, setIsDark }) {
                 type="submit"
                 className="btn btn-error mt-4"
                 onClick={() => {
-                  deleteProject(deleteProjectId);
+                  handleDeleteProject(deleteProjectId);
                 }}
               >
                 Yes, delete it
