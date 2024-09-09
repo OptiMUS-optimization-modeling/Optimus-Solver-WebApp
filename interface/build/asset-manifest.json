@@ -1,7 +1,11 @@
 {
   "files": {
     "main.css": "/static/css/main.cd974c5b.css",
+<<<<<<< HEAD
     "main.js": "/static/js/main.354034be.js",
+=======
+    "main.js": "/static/js/main.094ed82d.js",
+>>>>>>> b420440 (build push)
     "static/js/453.55d14284.chunk.js": "/static/js/453.55d14284.chunk.js",
     "static/media/KaTeX_AMS-Regular.ttf": "/static/media/KaTeX_AMS-Regular.853be92419a6c3766b9a.ttf",
     "static/media/KaTeX_Main-Regular.ttf": "/static/media/KaTeX_Main-Regular.9eba1d77abcf2aa6e94e.ttf",
@@ -65,11 +69,19 @@
     "static/media/KaTeX_Size3-Regular.woff2": "/static/media/KaTeX_Size3-Regular.e1951519f6f0596f7356.woff2",
     "index.html": "/index.html",
     "main.cd974c5b.css.map": "/static/css/main.cd974c5b.css.map",
+<<<<<<< HEAD
     "main.354034be.js.map": "/static/js/main.354034be.js.map",
+=======
+    "main.094ed82d.js.map": "/static/js/main.094ed82d.js.map",
+>>>>>>> b420440 (build push)
     "453.55d14284.chunk.js.map": "/static/js/453.55d14284.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.cd974c5b.css",
+<<<<<<< HEAD
     "static/js/main.354034be.js"
+=======
+    "static/js/main.094ed82d.js"
+>>>>>>> b420440 (build push)
   ]
 }

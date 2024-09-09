@@ -30,7 +30,10 @@ origins = [
 
 
 def create_app():
-    app = Flask(__name__, static_folder='../interface/build', template_folder='../interface/build')
+    print('ZZZZZZZZZ: ', os.path.abspath('./interface/build'))
+    app = Flask(__name__, 
+                static_folder=os.path.abspath('./interface/build'), 
+                template_folder=os.path.abspath('./interface/build'))
     
     # Apply CORS to the Flask app for all routes
     CORS(app, origins=origins, supports_credentials=True)
@@ -81,10 +84,12 @@ def create_app():
     # Serve React App
     @app.route('/')
     def serve():
+        print(f"Serving index.html from {app.static_folder}")
         return send_from_directory(app.static_folder, 'index.html')
 
     @app.route('/<path:path>')
     def serve_static(path):
+        print(f"Serving {path} from {app.static_folder}")
         return send_from_directory(app.static_folder, path)
 
         
