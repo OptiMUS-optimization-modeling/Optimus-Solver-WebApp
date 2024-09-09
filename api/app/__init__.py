@@ -65,26 +65,20 @@ def create_app():
     if not os.path.exists("api/projectData/"):
         os.mkdir("api/projectData/")
 
-    # Register blueprints
-    app.register_blueprint(main.bp)
-    app.register_blueprint(analyze.bp)
-    app.register_blueprint(scan_parameters.bp)
-    app.register_blueprint(process_data.bp)
-    app.register_blueprint(extraction.bp)
-    app.register_blueprint(formulation.bp)
-    app.register_blueprint(coding.bp)
-    app.register_blueprint(evaluation.bp)
-    app.register_blueprint(misc.bp)
-    app.register_blueprint(auth.bp, url_prefix="/auth")
-    app.register_blueprint(projects.bp, url_prefix="/projects")
+    # Register blueprints with /api prefix
+    app.register_blueprint(main.bp, url_prefix="/api")
+    app.register_blueprint(analyze.bp, url_prefix="/api")
+    app.register_blueprint(scan_parameters.bp, url_prefix="/api")
+    app.register_blueprint(process_data.bp, url_prefix="/api")
+    app.register_blueprint(extraction.bp, url_prefix="/api")
+    app.register_blueprint(formulation.bp, url_prefix="/api")
+    app.register_blueprint(coding.bp, url_prefix="/api")
+    app.register_blueprint(evaluation.bp, url_prefix="/api")
+    app.register_blueprint(misc.bp, url_prefix="/api")
+    app.register_blueprint(auth.bp, url_prefix="/api/auth")
+    app.register_blueprint(projects.bp, url_prefix="/api/projects")
 
     return app
 
-if not os.getenv("FLASK_ENV") in ["development", "production"]:
-    raise ValueError("FLASK_ENV must be set to 'development' or 'production'.")
 
 app = create_app()
-
-if __name__ == "__main__":
-    port = int(os.environ.get("PORT", 5000))
-    app.run(host="0.0.0.0", port=port)
