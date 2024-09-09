@@ -1,0 +1,8 @@
+{
+  "cacheDirectories": [
+    "interface/node_modules"
+  ],
+  "scripts": {
+    "heroku-postbuild": "cd interface && npm install && npm run build"
+  }
+}
