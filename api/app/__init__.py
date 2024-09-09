@@ -80,7 +80,11 @@ def create_app():
 
     return app
 
+if not os.getenv("FLASK_ENV") in ["development", "production"]:
+    raise ValueError("FLASK_ENV must be set to 'development' or 'production'.")
+
+app = create_app()
+
 if __name__ == "__main__":
-    app = create_app()
     port = int(os.environ.get("PORT", 5000))
     app.run(host="0.0.0.0", port=port)

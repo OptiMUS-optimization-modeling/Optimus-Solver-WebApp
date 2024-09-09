@@ -1,1 +1,1 @@
-   web: gunicorn -w 3 -b 0.0.0.0:$PORT "api.app:create_app()"
+   web: gunicorn --workers 3 api.app:app
