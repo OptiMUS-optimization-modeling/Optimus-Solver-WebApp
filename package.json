@@ -1,8 +1,0 @@
-{
-  "name": "optimus-root",
-  "version": "0.1.0",
-  "private": true,
-  "scripts": {
-    "heroku-postbuild": "echo 'Running heroku-postbuild' && cd interface && npm install && npm run build"
-  }
-}
