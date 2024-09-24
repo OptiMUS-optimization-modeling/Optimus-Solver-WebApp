@@ -4,7 +4,7 @@ import firebase_admin
 from firebase_admin import credentials, auth
 
 import os
-
+from redis import Redis
 
 from .routes.parameters import scan_parameters, process_data
 from .routes.targets import extraction
@@ -14,6 +14,7 @@ from .routes.evaluation import evaluation
 from .routes.auth import auth
 from .routes.projects import projects
 
+from .new_routes import extract_params
 from .routes import main, analyze, misc
 from .utils.setup import get_clients
 
@@ -27,18 +28,21 @@ origins = [
 ]
 
 
-
-
 def create_app():
-    app = Flask(__name__, 
-                static_folder=os.path.abspath('./interface/build'), 
-                template_folder=os.path.abspath('./interface/build'))
-    
+    app = Flask(
+        __name__,
+        static_folder=os.path.abspath("./interface/build"),
+        template_folder=os.path.abspath("./interface/build"),
+    )
+
     # Apply CORS to the Flask app for all routes
     CORS(app, origins=origins, supports_credentials=True)
 
     # Load config
     app.config.from_object("api.config.Config")
+
+    # Initialize Redis client for other purposes
+    app.redis = Redis.from_url(app.config["REDIS_URL"])
 
     # Load clients
     app.clients = get_clients(app.config)
@@ -46,9 +50,9 @@ def create_app():
     app.config.update(
         SESSION_COOKIE_SECURE=True,
         SESSION_COOKIE_SAMESITE="None",
-        API_URL=app.config['API_URL'],
-        OPENAI_API_KEY=app.config['OPENAI_API_KEY'],
-        ANTHROPIC_API_KEY=app.config['ANTHROPIC_API_KEY']
+        API_URL=app.config["API_URL"],
+        OPENAI_API_KEY=app.config["OPENAI_API_KEY"],
+        ANTHROPIC_API_KEY=app.config["ANTHROPIC_API_KEY"],
     )
 
     # if tmp folder doesn't exist, create it
@@ -75,23 +79,23 @@ def create_app():
     app.register_blueprint(misc.bp, url_prefix="/api")
     app.register_blueprint(auth.bp, url_prefix="/api/auth")
     app.register_blueprint(projects.bp, url_prefix="/api/projects")
+    app.register_blueprint(extract_params.bp, url_prefix="/new_api")
 
-    # Serve React App
-    @app.route('/')
-    def serve():
-        print(f"Serving index.html from {app.static_folder}")
-        return send_from_directory(app.static_folder, 'index.html')
+    # # Serve React App
+    # @app.route("/")
+    # def serve():
+    #     print(f"Serving index.html from {app.static_folder}")
+    #     return send_from_directory(app.static_folder, "index.html")
 
-    @app.route('/<path:path>')
-    def serve_static(path):
-        if os.path.exists(os.path.join(app.static_folder, path)):
-            print(f"Serving {path} from {app.static_folder}")
-            return send_from_directory(app.static_folder, path)
-        else:
-            print(f"Path {path} not found. Serving index.html from {app.static_folder}")
-            return send_from_directory(app.static_folder, 'index.html')
+    # @app.route("/<path:path>")
+    # def serve_static(path):
+    #     if os.path.exists(os.path.join(app.static_folder, path)):
+    #         print(f"Serving {path} from {app.static_folder}")
+    #         return send_from_directory(app.static_folder, path)
+    #     else:
+    #         print(f"Path {path} not found. Serving index.html from {app.static_folder}")
+    #         return send_from_directory(app.static_folder, "index.html")
 
-        
     return app
 
 
