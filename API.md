@@ -18,12 +18,12 @@ Endpoint to extract parameters from the natural language description of the prob
 {
     "parameters": {
         <str:symbol>: {
-            "description": str,
+            "definition": str,
             "shape": [<str:dimension_parameter_symbol>]
         }
     },
     "problem_summary": str,
-    "reformatted_problem_description": str
+    "reformatted_description": str
 }
 ```
 
@@ -35,11 +35,11 @@ Endpoint to extract clauses from the reformatted natural language description of
 
 ```json
 {
-    "reformatted_problem_description": str,
+    "reformatted_description": str,
     "problem_summary": str,
     "parameters": {
         <str:symbol>: {
-            "description": str,
+            "definition": str,
             "shape": [<str:dimension_parameter_symbol>]
         }
     }
@@ -57,7 +57,7 @@ id=0 is the objective
     },
     "graph": {
         <str:clause_id>: {
-            "parameters": [<int:parameter_id>]
+            "parameters": [<str:parameter_symbol>]
         }
     }
 }
