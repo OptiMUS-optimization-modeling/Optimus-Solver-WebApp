@@ -52,13 +52,8 @@ id=0 is the objective
 
 ```json
 {
-    "clauses": {
+    "constraints": {
         <int:clause_id>: <string:clause_description>
-    },
-    "graph": {
-        <str:clause_id>: {
-            "parameters": [<str:parameter_symbol>]
-        }
     }
 }
 ```
