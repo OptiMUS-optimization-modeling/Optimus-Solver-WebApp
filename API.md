@@ -17,9 +17,8 @@ Endpoint to extract parameters from the natural language description of the prob
 ```json
 {
     "parameters": {
-        <int:parameter_id>: {
+        <str:symbol>: {
             "description": str,
-            "symbol": str,
             "shape": [<str:dimension_parameter_symbol>]
         }
     },
@@ -39,9 +38,8 @@ Endpoint to extract clauses from the reformatted natural language description of
     "reformatted_problem_description": str,
     "problem_summary": str,
     "parameters": {
-        <int:parameter_id>: {
+        <str:symbol>: {
             "description": str,
-            "symbol": str,
             "shape": [<str:dimension_parameter_symbol>]
         }
     }
@@ -58,7 +56,7 @@ id=0 is the objective
         <int:clause_id>: <string:clause_description>
     },
     "graph": {
-        <int:clause_id>: {
+        <str:clause_id>: {
             "parameters": [<int:parameter_id>]
         }
     }
@@ -74,22 +72,20 @@ related_parameters should be self-contained (it should cover all parameters that
 ```json
 {
     "related_parameters": {
-        <int:parameter_id>: {
+        <str:symbol>: {
             "description": str,
-            "symbol": str,
             "shape": [<str:dimension_parameter_symbol>]
         }
     },
     "existing_variables": {
-        <int:id>:{
+        <str:symbol>:{
             "description": str,
-            "symbol": str,
             "type": str,
             "shape": [<str:dimension_parameter_symbol>]
         }
     },
     "clause":{
-        "id": int,
+        "id": str,
         "description": str,
         "shape": [<str:dimension_parameter_symbol>]
     },
@@ -102,14 +98,13 @@ related_parameters should be self-contained (it should cover all parameters that
 ```json
 {
     "updated_variables": {
-        <int:id>:{
+        <str:symbol>:{
             "description":str,
-            "symbol":str,
             "type": str,
             "shape": [<str:dimension_parameter_symbol>]
         }
     },
-    "related_variables": [<int:variable_id>],
+    "related_variables": [<str:variable_symbol>],
     "clause_formulation": str
 }
 ```
