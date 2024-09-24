@@ -53,7 +53,10 @@ id=0 is the objective
 ```json
 {
     "constraints": {
-        <int:clause_id>: <string:clause_description>
+        <int:clause_id>: {
+            "description": <string:clause_description>,
+            "type": str ('implicit' or 'explicit')
+        },
     },
     "objective": str
 }
