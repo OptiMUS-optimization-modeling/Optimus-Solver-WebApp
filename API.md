@@ -54,7 +54,8 @@ id=0 is the objective
 {
     "constraints": {
         <int:clause_id>: <string:clause_description>
-    }
+    },
+    "objective": str
 }
 ```
 
