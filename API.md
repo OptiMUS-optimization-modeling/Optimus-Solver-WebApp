@@ -132,6 +132,7 @@ related_parameters should be self-contained (it should cover all parameters that
         "formulation": str,
     },
     "problem_summary": str,
+    "solver" str
 }
 ```
 
