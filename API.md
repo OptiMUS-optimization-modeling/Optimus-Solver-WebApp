@@ -70,7 +70,7 @@ related_parameters should be self-contained (it should cover all parameters that
 
 ```json
 {
-    "related_parameters": {
+    "parameters": {
         <str:symbol>: {
             "description": str,
             "shape": [<str:dimension_parameter_symbol>]
@@ -114,25 +114,22 @@ related_parameters should be self-contained (it should cover all parameters that
 ```json
 {
     "related_parameters": {
-        <int:parameter_id>: {
+      <str:symbol>:{
             "description": str,
-            "symbol": str,
             "shape": [<str:dimension_parameter_symbol>]
         }
     },
     "related_variables": {
-        <int:id>:{
+        <str:symbol>:{
             "description": str,
-            "symbol": str,
             "type": str,
             "shape": [<str:dimension_parameter_symbol>]
         }
     },
     "clause":{
-        "id": int,
+        "id": str,
         "description": str,
         "formulation": str,
-        "shape": [<str:dimension_parameter_symbol>]
     },
     "problem_summary": str,
 }
