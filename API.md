@@ -86,7 +86,6 @@ related_parameters should be self-contained (it should cover all parameters that
     "clause":{
         "id": str,
         "description": str,
-        "shape": [<str:dimension_parameter_symbol>]
     },
     "problem_summary": str,
 }
