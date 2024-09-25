@@ -17,14 +17,13 @@ Endpoint to extract parameters from the natural language description of the prob
 ```json
 {
     "parameters": {
-        <int:parameter_id>: {
-            "description": str,
-            "symbol": str,
+        <str:symbol>: {
+            "definition": str,
             "shape": [<str:dimension_parameter_symbol>]
         }
     },
     "problem_summary": str,
-    "reformatted_problem_description": str
+    "reformatted_description": str
 }
 ```
 
@@ -36,12 +35,11 @@ Endpoint to extract clauses from the reformatted natural language description of
 
 ```json
 {
-    "reformatted_problem_description": str,
+    "reformatted_description": str,
     "problem_summary": str,
     "parameters": {
-        <int:parameter_id>: {
-            "description": str,
-            "symbol": str,
+        <str:symbol>: {
+            "definition": str,
             "shape": [<str:dimension_parameter_symbol>]
         }
     }
@@ -54,14 +52,13 @@ id=0 is the objective
 
 ```json
 {
-    "clauses": {
-        <int:clause_id>: <string:clause_description>
-    },
-    "graph": {
+    "constraints": {
         <int:clause_id>: {
-            "parameters": [<int:parameter_id>]
-        }
-    }
+            "description": <string:clause_description>,
+            "type": str ('implicit' or 'explicit')
+        },
+    },
+    "objective": str
 }
 ```
 
@@ -73,25 +70,22 @@ related_parameters should be self-contained (it should cover all parameters that
 
 ```json
 {
-    "related_parameters": {
-        <int:parameter_id>: {
+    "parameters": {
+        <str:symbol>: {
             "description": str,
-            "symbol": str,
             "shape": [<str:dimension_parameter_symbol>]
         }
     },
     "existing_variables": {
-        <int:id>:{
+        <str:symbol>:{
             "description": str,
-            "symbol": str,
             "type": str,
             "shape": [<str:dimension_parameter_symbol>]
         }
     },
     "clause":{
-        "id": int,
+        "id": str,
         "description": str,
-        "shape": [<str:dimension_parameter_symbol>]
     },
     "problem_summary": str,
 }
@@ -102,14 +96,13 @@ related_parameters should be self-contained (it should cover all parameters that
 ```json
 {
     "updated_variables": {
-        <int:id>:{
+        <str:symbol>:{
             "description":str,
-            "symbol":str,
             "type": str,
             "shape": [<str:dimension_parameter_symbol>]
         }
     },
-    "related_variables": [<int:variable_id>],
+    "related_variables": [<str:variable_symbol>],
     "clause_formulation": str
 }
 ```
@@ -121,27 +114,25 @@ related_parameters should be self-contained (it should cover all parameters that
 ```json
 {
     "related_parameters": {
-        <int:parameter_id>: {
+      <str:symbol>:{
             "description": str,
-            "symbol": str,
             "shape": [<str:dimension_parameter_symbol>]
         }
     },
     "related_variables": {
-        <int:id>:{
+        <str:symbol>:{
             "description": str,
-            "symbol": str,
             "type": str,
             "shape": [<str:dimension_parameter_symbol>]
         }
     },
     "clause":{
-        "id": int,
+        "id": str,
         "description": str,
         "formulation": str,
-        "shape": [<str:dimension_parameter_symbol>]
     },
     "problem_summary": str,
+    "solver" str
 }
 ```
 
