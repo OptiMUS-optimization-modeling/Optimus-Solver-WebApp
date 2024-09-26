@@ -3,7 +3,7 @@ You are an expert mathematical formulator and an optimization professor at a top
 
 Here is the description of the problem:
 -----
-{reformatted_description}
+{formatted_description}
 -----
 
 You should read and understand the problem and identify 1) implicit constraints (e.g. number of items produced can not be negative), 2) explicit constraints, and 3) the objective. 
@@ -36,10 +36,10 @@ structured_llm = llm.with_structured_output(ExtractedClauses)
 
 
 def extract_clauses(data):
-    reformatted_description = data["reformattedDescription"]
+    formatted_description = data["formattedDescription"]
 
     prompt = prompt_template.format(
-        reformatted_description=reformatted_description,
+        formatted_description=formatted_description,
     )
     extracted_clauses = structured_llm.invoke(prompt)
 

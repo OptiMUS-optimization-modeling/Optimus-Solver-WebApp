@@ -50,6 +50,9 @@ def check_project_ownership(f):
     def decorated_function(*args, **kwargs):
         user_id = session.get("user_id")
         project_id = request.json.get("project_id")
+        if not project_id:
+            project_id = request.json.get("projectId")
+
         db = current_app.clients["firestore_client"]
 
         # Check if project_id belongs to user

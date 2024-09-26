@@ -10,85 +10,65 @@ import Header from "./Utils/Header.js";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 
 function App() {
-    // ================================================
-    // Dark mode
-    // ================================================
+  // ================================================
+  // Dark mode
+  // ================================================
 
-    const [isDark, setIsDark] = useState(
-        () => JSON.parse(localStorage.getItem("isDark")) || 0
-    );
-    useEffect(() => {
-        localStorage.setItem("isDark", JSON.stringify(isDark));
-    }, [isDark]);
+  const [isDark, setIsDark] = useState(
+    () => JSON.parse(localStorage.getItem("isDark")) || 0
+  );
+  useEffect(() => {
+    localStorage.setItem("isDark", JSON.stringify(isDark));
+  }, [isDark]);
 
-    const auth = getAuth();
-    const [currentUser, setCurrentUser] = useState(null);
+  const auth = getAuth();
+  const [currentUser, setCurrentUser] = useState(null);
 
-    useEffect(() => {
-        const unsubscribe = onAuthStateChanged(auth, (user) => {
-            if (user) {
-                setCurrentUser(user); // User is signed in
-            } else {
-                setCurrentUser(null); // User is signed out
-            }
-        });
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (user) {
+        setCurrentUser(user); // User is signed in
+      } else {
+        setCurrentUser(null); // User is signed out
+      }
+    });
 
-        // Cleanup subscription on unmount
-        return () => unsubscribe();
-    }, [auth]);
+    // Cleanup subscription on unmount
+    return () => unsubscribe();
+  }, [auth]);
 
-    return (
-        <Router>
-            <div className="h-5/6">
-                <Header
-                    currentUser={currentUser}
-                    setCurrentUser={setCurrentUser}
-                    isDark={isDark}
-                    setIsDark={setIsDark}
-                />
-                <AuthHandler>
-                    <Routes>
-                        <Route
-                            path="/signup"
-                            element={
-                                <SignupPage
-                                    isDark={isDark}
-                                    setIsDark={setIsDark}
-                                />
-                            }
-                        />
-                        <Route
-                            path="/login"
-                            element={
-                                <LoginPage
-                                    isDark={isDark}
-                                    setIsDark={setIsDark}
-                                />
-                            }
-                        />
-                        <Route
-                            path="/dashboard"
-                            element={
-                                <Dashboard
-                                    isDark={isDark}
-                                    setIsDark={setIsDark}
-                                />
-                            }
-                        />
-                        <Route
-                            path="/project/:project_id"
-                            element={
-                                <MainApp
-                                    isDark={isDark}
-                                    setIsDark={setIsDark}
-                                />
-                            }
-                        />
-                    </Routes>
-                </AuthHandler>
-            </div>
-        </Router>
-    );
+  return (
+    <Router>
+      <div className="h-5/6">
+        <Header
+          currentUser={currentUser}
+          setCurrentUser={setCurrentUser}
+          isDark={isDark}
+          setIsDark={setIsDark}
+        />
+        <AuthHandler>
+          <Routes>
+            <Route
+              path="/signup"
+              element={<SignupPage isDark={isDark} setIsDark={setIsDark} />}
+            />
+            <Route
+              path="/login"
+              element={<LoginPage isDark={isDark} setIsDark={setIsDark} />}
+            />
+            <Route
+              path="/dashboard"
+              element={<Dashboard isDark={isDark} setIsDark={setIsDark} />}
+            />
+            <Route
+              path="/project/:project_id"
+              element={<MainApp isDark={isDark} setIsDark={setIsDark} />}
+            />
+          </Routes>
+        </AuthHandler>
+      </div>
+    </Router>
+  );
 }
 
 export default App;

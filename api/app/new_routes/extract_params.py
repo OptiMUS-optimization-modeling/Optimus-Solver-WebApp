@@ -13,7 +13,7 @@ you should go through the statements one by one, and identify and separate the p
 - Use single capital letters for symbols that represent dimensions for indices of other parameters (e.g. N, M, etc.)
 - Note that parameters are known values upon which the model is built, and they do not change during the optimization process.  However, variables are the unknowns that the optimization process seeks to solve. DO NOT include variables in the parameters list!
 - Make sure you include all the parameters in the updated problem description.
-- Replace constant values with parameters where needed. The reformatted description should not contain any constants.
+- Replace constant values with parameters where needed. The formatted description should not contain any constants.
 - Combine multiple paramaters of the same type into a higher-dimensional parameter if appropriate.
 
 Take a deep breath and tackle the problem step by step.
@@ -39,34 +39,33 @@ class Parameter(BaseModel):
     )
 
 
-class ReformattedProblem(BaseModel):
+class FormattedProblem(BaseModel):
     parameters: list[Parameter] = Field(description="The list of parameters")
-    reformattedDescription: str = Field(
-        description="The reformatted problem description where the problem statement has been rewritten to use the accurate parameter symbols."
+    formattedDescription: str = Field(
+        description="The formatted problem description where the problem statement has been rewritten to use the accurate parameter symbols."
     )
     problemSummary: str = Field(description="A 2-3 sentence summary of the problem.")
 
 
-structured_llm = llm.with_structured_output(ReformattedProblem)
+structured_llm = llm.with_structured_output(FormattedProblem)
 
 
 def extract_params(data):
 
     description = data["problemDescription"]
     prompt = prompt_template.format(description=description)
-    parameters = structured_llm.invoke(prompt)
+    res = structured_llm.invoke(prompt)
 
     output = {
         "parameters": {
             p.symbol: {
                 "definition": p.definition,
-                # "value": p.value,
                 "shape": p.shape,
             }
-            for p in parameters.parameters
+            for p in res.parameters
         },
-        "reformattedDescription": parameters.reformattedDescription,
-        "problemSummary": parameters.problemSummary,
+        "formattedDescription": res.formattedDescription,
+        "problemSummary": res.problemSummary,
     }
 
     return output

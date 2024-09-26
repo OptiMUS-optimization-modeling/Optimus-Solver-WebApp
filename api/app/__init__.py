@@ -14,7 +14,8 @@ from .routes.evaluation import evaluation
 from .routes.auth import auth
 from .routes.projects import projects
 
-from .new_routes import extract_params
+from .new_routes import new_routes
+
 from .routes import main, analyze, misc
 from .utils.setup import get_clients
 
@@ -79,7 +80,7 @@ def create_app():
     app.register_blueprint(misc.bp, url_prefix="/api")
     app.register_blueprint(auth.bp, url_prefix="/api/auth")
     app.register_blueprint(projects.bp, url_prefix="/api/projects")
-    app.register_blueprint(extract_params.bp, url_prefix="/new_api")
+    app.register_blueprint(new_routes.bp, url_prefix="/api/new_api")
 
     # # Serve React App
     # @app.route("/")

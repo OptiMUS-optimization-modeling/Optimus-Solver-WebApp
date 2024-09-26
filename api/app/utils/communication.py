@@ -1,7 +1,8 @@
 import traceback
 from flask import current_app
 import time
-from google.cloud import firestore
+from redis import Redis
+import json
 
 
 def get_llm_response(prompt, model="gpt-4-1106-preview"):
@@ -22,18 +23,34 @@ def get_llm_response(prompt, model="gpt-4-1106-preview"):
 
 
 def process_with_retries(app_context, request_id, count, func, *args, **kwargs):
-    # create a new task in the database
+    """
+    Process a function with retries and store task status in Redis.
 
+    Args:
+        app_context: Current application context.
+        request_id: Unique identifier for the request.
+        count: Number of retry attempts.
+        func: The function to execute.
+        *args: Positional arguments for the function.
+        **kwargs: Keyword arguments for the function.
+    """
     app_context.push()
-    db = current_app.clients["firestore_client"]
-    db.collection("tasks").document(request_id).set(
-        {
-            "status": "processing",
-            "errors": [],
-            "result": None,
-            "lastUpdated": firestore.SERVER_TIMESTAMP,
-        }
-    )
+    redis_client: Redis = current_app.redis
+
+    # Initialize task data
+    task_key = f"task:{request_id}"
+    initial_task = {
+        "status": "processing",
+        "errors": json.dumps([]),
+        "result": json.dumps(None),
+        "lastUpdated": time.time(),
+    }
+    redis_client.hmset(task_key, initial_task)
+    # Set expiration to 120 seconds (2 minutes)
+    redis_client.expire(task_key, 180)
+
+    # print all tasks
+    print(redis_client.keys("task:*"))
 
     errs = []
     while count > 0:
@@ -42,17 +59,29 @@ def process_with_retries(app_context, request_id, count, func, *args, **kwargs):
             break
         except Exception as e:
             full_err = traceback.format_exc()
-
             full_err += "\n" + str(e)
             errs.append(full_err)
             print(e)
             count -= 1
+            time.sleep(1)  # Optional: wait before retrying
 
     if count == 0:
-        db.collection("tasks").document(request_id).update(
-            {"status": "failed", "errors": errs}
-        )
+        # Update task as failed
+        updated_task = {
+            "status": "failed",
+            "errors": json.dumps(errs),
+            "lastUpdated": time.time(),
+        }
+        redis_client.hmset(task_key, updated_task)
     else:
-        db.collection("tasks").document(request_id).update(
-            {"status": "done", "errors": errs, "result": res}
-        )
+        # Update task as done
+        updated_task = {
+            "status": "done",
+            "errors": json.dumps(errs),
+            "result": json.dumps(res),
+            "lastUpdated": time.time(),
+        }
+        redis_client.hmset(task_key, updated_task)
+
+    # Reset expiration upon task completion
+    redis_client.expire(task_key, 180)
