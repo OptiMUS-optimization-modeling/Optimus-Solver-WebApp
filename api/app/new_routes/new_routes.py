@@ -47,7 +47,14 @@ def extract_params_wrapper(user_id, project_id, data):
         {
             "problemDescription": data["problemDescription"],
             "problemSummary": res["problemSummary"],
-            "parameters": res["parameters"],
+            "parameters": {
+                get_unique_id(): {
+                    "definition": res["parameters"][p]["definition"],
+                    "shape": res["parameters"][p]["shape"],
+                    "symbol": p,
+                }
+                for p in res["parameters"]
+            },
             "formattedDescription": res["formattedDescription"],
         }
     )
