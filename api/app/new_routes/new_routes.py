@@ -41,7 +41,6 @@ def extract_params_wrapper(user_id, project_id, data):
     db = current_app.clients["firestore_client"]
     project = db.collection("projects").document(project_id)
 
-    print("afdafadfasfd")
     print(json.dumps(res, indent=4))
     project.update(
         {
@@ -64,10 +63,25 @@ def extract_clauses_wrapper(user_id, project_id, data):
     res = extract_clauses(data)
     db = current_app.clients["firestore_client"]
     project = db.collection("projects").document(project_id)
+
+    print(json.dumps(res, indent=4))
+
     project.update(
         {
-            "constraints": res["constraints"],
-            "objective": res["objective"],
+            "constraints": [
+                {
+                    "id": c,
+                    "description": res["constraints"][c]["description"],
+                    "type": res["constraints"][c]["type"],
+                }
+                for c in res["constraints"]
+            ],
+            "objective": [
+                {
+                    "id": get_unique_id(),
+                    "description": res["objective"],
+                }
+            ],
         }
     )
 
@@ -116,7 +130,15 @@ def handle_extract_params():
 @login_required
 def handle_extract_clauses():
     data = request.json
-    return handle_request_async(extract_clauses_wrapper, data)
+
+    data = request.json
+    project_id = data["project_id"]
+    user_id = session["user_id"]
+
+    print(
+        f"Extracting clauses for project {project_id} with user {user_id},\ndata: {data}"
+    )
+    return handle_request_async(extract_clauses_wrapper, user_id, project_id, data)
 
 
 @bp.route("/formulate_clause", methods=["POST"])

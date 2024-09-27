@@ -77,6 +77,8 @@ def update_parameter():
         shape = data.get("shape")
         definition = data.get("definition")
 
+        shape = [x.replace('"', "").replace("'", "") for x in shape]
+
         if not parameter_id:
             return jsonify({"error": "Missing parameter_id"}), 400
 

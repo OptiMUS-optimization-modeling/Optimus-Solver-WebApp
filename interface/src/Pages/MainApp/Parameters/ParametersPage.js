@@ -55,6 +55,7 @@ const ParametersPage = ({
       // replace single quotes with double quotes
       shape = shape.replace(/'/g, '"');
       const shapeList = JSON.parse(shape);
+      console.log("Shape List:", shapeList);
       if (Array.isArray(shapeList)) {
         shapeList.forEach((element) => {
           if (typeof element !== "string") {
