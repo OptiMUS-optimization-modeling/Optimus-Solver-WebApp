@@ -13,9 +13,7 @@ const ParameterRow = ({
 }) => {
   // define variables for the elements
   const [symbol, setSymbol] = useState(data.symbol);
-  const [shape, setShape] = useState(
-    `[${data.shape.map((item) => `"${item}"`).join(", ")}]`
-  );
+  const [shape, setShape] = useState(JSON.stringify(data.shape));
   const [definition, setDefinition] = useState(data.definition);
   const [shapeError, setShapeError] = useState(false);
 
@@ -76,7 +74,6 @@ const ParameterRow = ({
 
   return (
     <tr>
-      {JSON.stringify(data)}
       <th className="indexColumn">
         <input
           type="text"

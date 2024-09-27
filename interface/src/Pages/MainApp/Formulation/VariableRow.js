@@ -3,43 +3,69 @@ import React, { useState } from "react";
 const VariableRow = ({
   variableKey,
   data,
-  updateVariable,
   isAnyLoading,
   project_id,
   updateProject,
+  shapeValid, // Ensure this prop is passed if shape validation is needed
 }) => {
   const [symbol, setSymbol] = useState(data.symbol);
-  const [shape, setShape] = useState(data.shape);
+  const [shape, setShape] = useState(JSON.stringify(data.shape));
   const [definition, setDefinition] = useState(data.definition);
+  const [type, setType] = useState(data.type);
+
   const [buttonContent, setButtonContent] = useState(
     <i className="fa fa-trash"></i>
   );
 
-  // const updateVariables = (symbol, shape, definition) => {
-  //     const updatedParam = {
-  //         symbol: symbol,
-  //         shape: shape,
-  //         definition: definition,
-  //     };
-  //     updateVariable(variableKey, updatedParam);
-  // };
+  // Add shape validation state
+  const [shapeError, setShapeError] = useState(false);
 
-  const handleShapeChange = (e) => {
-    setShape(e.target.value);
-    updateVariable(variableKey, "shape", e.target.value);
-    // updateVariables(symbol, e.target.value, definition);
-  };
+  // Define the updateVariable function
+  const updateVariable = (symbol, shape, definition, type) => {
+    if (shape.length === 0) {
+      setShapeError(true);
+      return;
+    }
 
-  const handleDefinitionChange = (e) => {
-    setDefinition(e.target.value);
-    updateVariable(variableKey, "definition", e.target.value);
-    // updateVariables(symbol, shape, e.target.value);
-  };
+    if (!shapeValid(shape)) {
+      setShapeError(true);
+      return;
+    } else {
+      setShapeError(false);
+    }
 
-  const handleSymbolChange = (e) => {
-    setSymbol(e.target.value);
-    updateVariable(variableKey, "symbol", e.target.value);
-    // updateVariables(e.target.value, shape, definition);
+    console.log("Updating variable...");
+    try {
+      const shapeArray = shape
+        .replace(/['[\]]/g, "")
+        .split(",")
+        .map((item) => item.trim())
+        .filter((item) => item.length > 0);
+      console.log("Shape array:", shapeArray);
+      fetch(process.env.REACT_APP_BACKEND_URL + "/updateVariable", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+        body: JSON.stringify({
+          project_id: project_id,
+          variable_id: variableKey,
+          symbol: symbol,
+          shape: shapeArray,
+          definition: definition,
+          type: type,
+        }),
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          console.log("Updated variable:", data);
+          updateProject();
+        });
+    } catch (error) {
+      console.error("Error updating variable:", error);
+      alert("Error updating variable!");
+    }
   };
 
   const deleteVariable = (variableKey) => {
@@ -70,6 +96,7 @@ const VariableRow = ({
     }
   };
 
+  // Update the onBlur handlers to use the new updateVariable function
   return (
     <tr>
       <th className="indexColumn">
@@ -78,16 +105,29 @@ const VariableRow = ({
           placeholder="Buy_{i}"
           value={symbol}
           className="input input-bordered input-xs fullWidthInput"
-          onChange={handleSymbolChange}
+          onChange={(e) => {
+            setSymbol(e.target.value);
+          }}
+          onBlur={() => {
+            updateVariable(symbol, shape, definition, type);
+          }}
         />
       </th>
+
       <td className="shapeColumn">
         <input
           type="text"
           placeholder="['M', 'N']"
           value={shape}
-          className="input input-bordered input-xs fullWidthInput"
-          onChange={handleShapeChange}
+          className={`input input-bordered input-xs fullWidthInput ${
+            shapeError ? "border-error bg-error" : ""
+          }`}
+          onChange={(e) => {
+            setShape(e.target.value);
+          }}
+          onBlur={() => {
+            updateVariable(symbol, shape, definition, type);
+          }}
         />
       </td>
       <td className="definitionColumn">
@@ -96,8 +136,29 @@ const VariableRow = ({
           placeholder="Amount of material j required to produce 1 unit of i"
           value={definition}
           className="input input-bordered input-xs fullWidthInput"
-          onChange={handleDefinitionChange}
+          onChange={(e) => {
+            setDefinition(e.target.value);
+          }}
+          onBlur={() => {
+            updateVariable(symbol, shape, definition, type);
+          }}
         />
+      </td>
+      <td className="typeColumn">
+        <select
+          value={type}
+          className="input input-bordered input-xs fullWidthInput"
+          onChange={(e) => {
+            setType(e.target.value);
+          }}
+          onBlur={() => {
+            updateVariable(symbol, shape, definition, type);
+          }}
+        >
+          <option value="BINARY">BINARY</option>
+          <option value="INTEGER">INTEGER</option>
+          <option value="FLOAT">FLOAT</option>
+        </select>
       </td>
       <td className="actionColumn">
         <button

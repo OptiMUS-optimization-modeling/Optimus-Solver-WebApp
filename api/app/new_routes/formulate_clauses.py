@@ -103,10 +103,7 @@ def formulate_clause(data):
         problemSummary=problemSummary,
     )
 
-    print("PROMPT", prompt)
     res = structured_llm.invoke(prompt)
-
-    print("RES", res)
 
     output = {
         "formulation": res.formulation,

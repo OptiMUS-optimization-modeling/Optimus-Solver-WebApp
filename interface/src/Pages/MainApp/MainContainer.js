@@ -133,6 +133,27 @@ const MainContainer = ({
     }
   };
 
+  const shapeValid = (shape) => {
+    try {
+      // replace single quotes with double quotes
+      shape = shape.replace(/'/g, '"');
+      const shapeList = JSON.parse(shape);
+      console.log("Shape List:", shapeList);
+      if (Array.isArray(shapeList)) {
+        shapeList.forEach((element) => {
+          if (typeof element !== "string") {
+            throw new Error("Not a list of strings");
+          }
+        });
+        return true;
+      } else {
+        throw new Error("Not a list");
+      }
+    } catch (error) {
+      return false;
+    }
+  };
+
   const updateConstraint = (key, field, value) => {
     // send a request to update the constraint
     // then fetch the updated list of constraints
@@ -189,6 +210,7 @@ const MainContainer = ({
               setModalContent={setModalContent}
               project={project}
               updateProject={updateProject}
+              shapeValid={shapeValid}
             />
           </div>
         )}
@@ -218,8 +240,8 @@ const MainContainer = ({
               // objective={objective}
               // setObjective={setObjective}
               // background={background}
-              // parameters={parameters}
-              // variables={variables}
+              parameters={parameters}
+              variables={variables}
               // setVariables={setVariables}
               // modalTitle={modalTitle}
               setModalTitle={setModalTitle}
@@ -230,6 +252,7 @@ const MainContainer = ({
               updateObjective={updateObjective}
               updateConstraint={updateConstraint}
               updateVariable={updateVariable}
+              shapeValid={shapeValid}
             />
           </div>
         )}

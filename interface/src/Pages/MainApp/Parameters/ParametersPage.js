@@ -19,6 +19,7 @@ const ParametersPage = ({
   setModalContent,
   project,
   updateProject,
+  shapeValid,
 }) => {
   const [tmpDescription, setTmpDescription] = useState(
     project.formattedDescription
@@ -49,27 +50,6 @@ const ParametersPage = ({
     });
     setAllPass(all_pass);
   }, [project.parameters]);
-
-  const shapeValid = (shape) => {
-    try {
-      // replace single quotes with double quotes
-      shape = shape.replace(/'/g, '"');
-      const shapeList = JSON.parse(shape);
-      console.log("Shape List:", shapeList);
-      if (Array.isArray(shapeList)) {
-        shapeList.forEach((element) => {
-          if (typeof element !== "string") {
-            throw new Error("Not a list of strings");
-          }
-        });
-        return true;
-      } else {
-        throw new Error("Not a list");
-      }
-    } catch (error) {
-      return false;
-    }
-  };
 
   const deleteParameter = (key) => {
     // send a request to delete the parameter

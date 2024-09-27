@@ -362,20 +362,38 @@ def update_variable():
     user_id = session.get("user_id")
     project_id = request.json.get("project_id")
     variable_id = request.json.get("variable_id")
-    field = request.json.get("field")
-    value = request.json.get("value")
-    db = current_app.clients["firestore_client"]
+    symbol = request.json.get("symbol")
+    shape = request.json.get("shape")
+    definition = request.json.get("definition")
+    type = request.json.get("type")
 
     print("user_id: ", user_id)
     print("project_id: ", project_id)
     print("variable_id: ", variable_id)
+    print("symbol: ", symbol)
+    print("shape: ", shape)
+    print("definition: ", definition)
+    print("type: ", type)
+
+    shape = [x.replace('"', "").replace("'", "") for x in shape]
 
     # find the user's projects in the database
-    project = db.collection("projects").document(project_id)
-    project_data = project.get().to_dict()
-    variables = project_data.get("variables", [])
 
-    variables[variable_id][field] = value
+    if not variable_id:
+        return jsonify({"error": "Missing variable_id"}), 400
+
+    db = current_app.clients["firestore_client"]
+    project = db.collection("projects").document(project_id)
+
+    variables = project.get().to_dict().get("variables", {})
+
+    if not variable_id in variables:
+        return jsonify({"error": "Variable not found!"}), 400
+
+    variables[variable_id]["symbol"] = symbol
+    variables[variable_id]["shape"] = shape
+    variables[variable_id]["definition"] = definition
+    variables[variable_id]["type"] = type
 
     project.update(
         {
