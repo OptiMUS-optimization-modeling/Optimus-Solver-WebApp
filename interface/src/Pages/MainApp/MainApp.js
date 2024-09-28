@@ -240,40 +240,38 @@ function MainApp({ isDark, setIsDark }) {
   };
 
   return (
-    <div className="drawer lg:drawer-open main-content">
+    <div className="drawer lg:drawer-open">
       <input id="my-drawer-2" type="checkbox" className="drawer-toggle" />
-      <div className="drawer-content flex flex-col w-full content-window">
-        <div className="">
-          <MainContainer
-            isDark={isDark}
-            currentStep={currentStep}
-            setCurrentStep={setCurrentStep}
-            // problemDescription={problemDescription}
-            // setProblemDescription={setProblemDescription}
-            // formattedDescription={formattedDescription}
-            // setFormattedDescription={setFormattedDescription}
-            // parameters={parameters}
-            // setParameters={setParameters}
-            // constraints={constraints}
-            // setConstraints={setConstraints}
-            // objective={objective}
-            // setObjective={setObjective}
-            // background={background}
-            // setBackground={setBackground}
-            // variables={variables}
-            // setVariables={setVariables}
-            data={data}
-            setData={setData}
-            // results={results}
-            // setResults={setResults}
-            // userId={userId}
-            resetState={resetState}
-            // dataButtonContent={dataButtonContent}
-            // setDataButtonContent={setDataButtonContent}
-            project={project}
-            updateProject={updateProject}
-          />
-        </div>
+      <div className="drawer-content flex flex-col items-center ">
+        <MainContainer
+          isDark={isDark}
+          currentStep={currentStep}
+          setCurrentStep={setCurrentStep}
+          // problemDescription={problemDescription}
+          // setProblemDescription={setProblemDescription}
+          // formattedDescription={formattedDescription}
+          // setFormattedDescription={setFormattedDescription}
+          // parameters={parameters}
+          // setParameters={setParameters}
+          // constraints={constraints}
+          // setConstraints={setConstraints}
+          // objective={objective}
+          // setObjective={setObjective}
+          // background={background}
+          // setBackground={setBackground}
+          // variables={variables}
+          // setVariables={setVariables}
+          data={data}
+          setData={setData}
+          // results={results}
+          // setResults={setResults}
+          // userId={userId}
+          resetState={resetState}
+          // dataButtonContent={dataButtonContent}
+          // setDataButtonContent={setDataButtonContent}
+          project={project}
+          updateProject={updateProject}
+        />
       </div>
 
       <div className="drawer-side">

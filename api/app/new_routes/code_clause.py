@@ -21,8 +21,6 @@ Here's the problem summary:
 
 Assume the parameters and variables are already defined and added to the model, gurobipy is imported as gp, and the model is named model. Generate the code needed to define the {clauseType} and add it to the model accordingly.
 
-Only generate the code needed to define the {clauseType} and add it to the model accordingly. 
-
 Here is an example of code to add the objective to the model:
 
 m.setObjective(quicksum(profit[k] * x[k, i] - storeCost * s[k, i] for k in range(K) for i in range(I)), gp.GRB.MAXIMIZE)
@@ -37,6 +35,10 @@ Here is an example of code to add a variable to the model:
 
 y = model.addVar(name="y", vtype=GRB.BINARY)
 
+- Only generate the code needed to define the {clauseType} and add it to the model accordingly. 
+- Do not include any comments or explanations.
+- Do not include any imports.
+- Even for simple constraints like non-negativity or sign constraints, include code to add them to the model explicitly (they are not added in the variable definition step).
 
 Take a deep breath, and solve the problem step by step.
 """

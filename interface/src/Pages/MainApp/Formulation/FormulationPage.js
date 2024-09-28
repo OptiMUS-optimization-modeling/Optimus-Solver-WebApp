@@ -227,7 +227,7 @@ const FormulationPage = ({
             </div>
             {project.objective.map((objective) => (
               <TargetFormulationCard
-                key="0"
+                key={objective.id} // Use objective.id as the key
                 targetKey={objective.id}
                 target={objective}
                 targetType="objective"

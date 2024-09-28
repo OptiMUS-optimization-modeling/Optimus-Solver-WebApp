@@ -72,6 +72,7 @@ def create_project():
             "parameters": {},
             "background": "",
             "variables": {},
+            "solver": "",
         }
     )
     return jsonify({"project_id": project.id}), 200

@@ -135,9 +135,16 @@ const MainContainer = ({
 
   const shapeValid = (shape) => {
     try {
+      console.log("Shape:", shape);
       // replace single quotes with double quotes
-      shape = shape.replace(/'/g, '"');
-      const shapeList = JSON.parse(shape);
+
+      let shapeList;
+      if (typeof shape === "string") {
+        shape = shape.replace(/'/g, '"');
+        shapeList = JSON.parse(shape);
+      } else {
+        shapeList = shape;
+      }
       console.log("Shape List:", shapeList);
       if (Array.isArray(shapeList)) {
         shapeList.forEach((element) => {

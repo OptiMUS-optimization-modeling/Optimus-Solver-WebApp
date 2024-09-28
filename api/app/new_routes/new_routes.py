@@ -74,6 +74,8 @@ def extract_clauses_wrapper(user_id, project_id, data):
                     "id": c,
                     "description": res["constraints"][c]["description"],
                     "type": res["constraints"][c]["type"],
+                    "formulation": "",
+                    "code": "",
                 }
                 for c in res["constraints"]
             ],
@@ -81,6 +83,8 @@ def extract_clauses_wrapper(user_id, project_id, data):
                 {
                     "id": get_unique_id(),
                     "description": res["objective"],
+                    "formulation": "",
+                    "code": "",
                 }
             ],
         }
@@ -176,14 +180,73 @@ def formulate_clause_wrapper(user_id, project_id, data):
 
 
 def code_clause_wrapper(user_id, project_id, data):
-    res = code_clause(data)
+    clause_type = data["clauseType"]
+    if clause_type == "objective":
+        clause_id = 0
+    else:
+        clause_id = data["clause"]["id"]
+
+    new_data = deepcopy(data)  # Changed to deep copy
+
+    print("-------DATA:   ", json.dumps(new_data, indent=4))
+
+    related_parameters = {
+        new_data["relatedParameters"][p]["symbol"]: {
+            "shape": new_data["relatedParameters"][p]["shape"],
+            "definition": new_data["relatedParameters"][p]["definition"],
+        }
+        for p in new_data["relatedParameters"]
+    }
+
+    new_data["related_parameters"] = related_parameters
+
+    related_variables = {
+        new_data["relatedVariables"][v]["symbol"]: {
+            "definition": new_data["relatedVariables"][v]["definition"],
+            "type": new_data["relatedVariables"][v]["type"],
+            "shape": new_data["relatedVariables"][v]["shape"],
+        }
+        for v in new_data["relatedVariables"]
+    }
+    new_data["relatedVariables"] = related_variables
+
+    res = code_clause(new_data)
+
+    print("-------RESULTS:   ", json.dumps(res, indent=4))
+
     db = current_app.clients["firestore_client"]
     project = db.collection("projects").document(project_id)
-    project.update(
-        {
-            "code": res["code"],
-        }
-    )
+
+    if clause_type == "objective":
+        objective = project.get().to_dict().get("objective", [{}])[0]
+        project.update(
+            {
+                "objective": [
+                    {
+                        "description": objective["description"],
+                        "formulation": objective["formulation"],
+                        "parametersUsed": objective["parametersUsed"],
+                        "variablesUsed": objective["variablesUsed"],
+                        "code": res["code"],
+                    }
+                ]
+            }
+        )
+    elif clause_type == "constraint":
+        constraints = project.get().to_dict().get("constraints", [])
+        for constraint in constraints:
+            if constraint["id"] == clause_id:
+                constraint.update(
+                    {
+                        "id": clause_id,
+                        "description": constraint["description"],
+                        "formulation": constraint["formulation"],
+                        "parametersUsed": constraint["parametersUsed"],
+                        "variablesUsed": constraint["variablesUsed"],
+                        "code": res["code"],
+                    }
+                )
+        project.update({"constraints": constraints})
 
 
 @bp.route("/extract_params", methods=["POST"])

@@ -42,9 +42,11 @@ const ParametersPage = ({
         param.shape === "" ||
         param.definition === ""
       ) {
+        console.log("Parameter is empty", key, param);
         all_pass = false;
       }
       if (!shapeValid(param.shape)) {
+        console.log("Shape is not valid", key, param);
         all_pass = false;
       }
     });

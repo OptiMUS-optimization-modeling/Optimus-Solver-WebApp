@@ -18,7 +18,7 @@ const TargetExtractionPage = ({
   );
   const [tmpBackground, setTmpBackground] = useState(project.problemSummary);
   const [tmpObjectiveDescription, setTmpObjectiveDescription] = useState(
-    project.objective[0].description
+    project.objective?.[0]?.description || ""
   );
   // const [tmpConstraints, setTmpConstraints] = useState(project.constraints);
   const [addButtonContent, setAddButtonContent] = useState(
@@ -91,6 +91,7 @@ const TargetExtractionPage = ({
 
     let callback = (data) => {
       console.log("Success:", data);
+
       updateProject();
 
       setIsLoading(false);

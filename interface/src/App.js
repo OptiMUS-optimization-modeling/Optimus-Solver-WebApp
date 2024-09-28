@@ -1,10 +1,5 @@
 import "./App.css";
-import {
-  BrowserRouter as Router,
-  Routes,
-  Route,
-  Navigate,
-} from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import LoginPage from "./Pages/Auth/Login"; // Your login component
 import SignupPage from "./Pages/Auth/Signup"; // Your signup component
 import MainApp from "./Pages/MainApp/MainApp"; // Your main component
@@ -44,35 +39,32 @@ function App() {
 
   return (
     <Router>
-      <div className="h-5/6">
-        <Header
-          currentUser={currentUser}
-          setCurrentUser={setCurrentUser}
-          isDark={isDark}
-          setIsDark={setIsDark}
-        />
-        <AuthHandler>
-          <Routes>
-            <Route
-              path="/signup"
-              element={<SignupPage isDark={isDark} setIsDark={setIsDark} />}
-            />
-            <Route
-              path="/login"
-              element={<LoginPage isDark={isDark} setIsDark={setIsDark} />}
-            />
-            <Route
-              path="/dashboard"
-              element={<Dashboard isDark={isDark} setIsDark={setIsDark} />}
-            />
-            <Route
-              path="/project/:project_id"
-              element={<MainApp isDark={isDark} setIsDark={setIsDark} />}
-            />
-            <Route path="/" element={<Navigate to="/dashboard" />} />
-          </Routes>
-        </AuthHandler>
-      </div>
+      <Header
+        currentUser={currentUser}
+        setCurrentUser={setCurrentUser}
+        isDark={isDark}
+        setIsDark={setIsDark}
+      />
+      <AuthHandler>
+        <Routes>
+          <Route
+            path="/signup"
+            element={<SignupPage isDark={isDark} setIsDark={setIsDark} />}
+          />
+          <Route
+            path="/login"
+            element={<LoginPage isDark={isDark} setIsDark={setIsDark} />}
+          />
+          <Route
+            path="/dashboard"
+            element={<Dashboard isDark={isDark} setIsDark={setIsDark} />}
+          />
+          <Route
+            path="/project/:project_id"
+            element={<MainApp isDark={isDark} setIsDark={setIsDark} />}
+          />
+        </Routes>
+      </AuthHandler>
     </Router>
   );
 }
