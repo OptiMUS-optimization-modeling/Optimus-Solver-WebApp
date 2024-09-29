@@ -8,19 +8,16 @@ bp = Blueprint("misc", __name__)
 
 @bp.route("/pollResult", methods=["POST"])
 def poll_result():
-    print("Polling result...")
 
     request_id = request.json.get("request_id")
     if not request_id:
         return jsonify({"error": "Missing request_id"}), 400
 
-    print(f"Request ID: {request_id}")
-
     redis_client: Redis = current_app.redis
     task_key = f"task:{request_id}"
     task_data = redis_client.hgetall(task_key)
 
-    print(f"Task Data: {task_data}")
+    print(f"Polling result for request ID: {request_id}, task data: {task_data}")
 
     if not task_data:
         return jsonify({"error": "No such task"}), 404

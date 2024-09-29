@@ -36,7 +36,7 @@ Here is an example of code to add a variable to the model:
 y = model.addVar(name="y", vtype=GRB.BINARY)
 
 - Only generate the code needed to define the {clauseType} and add it to the model accordingly. 
-- Do not include any comments or explanations.
+- Do not include any comments or explanations, unless no code is needed. If no code is needed, just return a comment saying "No code needed".
 - Assume imports, parameters definitions, variable definitions, and other setup code is already written. You must not include any setup code.
 
 - Even for simple constraints like non-negativity or sign constraints, include code to add them to the model explicitly (they are not added in the variable definition step).
@@ -101,11 +101,11 @@ def code_clause(data):
         problemSummary=problemSummary,
     )
 
-    print("SSSS ", prompt)
-
     res = structured_llm.invoke(prompt)
 
     output = {
         "code": res.code,
     }
+
+    print("Returining ", output)
     return output

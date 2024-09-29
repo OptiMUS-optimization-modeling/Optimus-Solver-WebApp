@@ -254,8 +254,6 @@ def code_clause_wrapper(user_id, project_id, data):
                 )
         project.update({"constraints": constraints})
 
-    time.sleep(0.5)
-
 
 @bp.route("/extract_params", methods=["POST"])
 @login_required

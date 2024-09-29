@@ -50,7 +50,7 @@ def process_with_retries(app_context, request_id, count, func, *args, **kwargs):
     redis_client.expire(task_key, 180)
 
     # print all tasks
-    print(redis_client.keys("task:*"))
+    print("All tasks: ", redis_client.keys("task:*"))
 
     errs = []
     while count > 0:

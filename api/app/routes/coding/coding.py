@@ -260,11 +260,6 @@ def code_target(target, target_type, user_id, project_id):
                 t.update(target)
                 break
 
-        print("Herererere")
-        print(target_type)
-        print(target_array)
-        print("Herererere")
-
         project.update({target_type: target_array})
         project.update({"variables": variables})
 

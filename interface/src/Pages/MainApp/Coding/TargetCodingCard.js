@@ -27,61 +27,6 @@ const TargetCodingCard = ({
 
   const theme = isDark ? "tomorrow_night" : "tomorrow";
 
-  // const handleCodeChange = (e) => {
-  //     updateTarget(targetKey, {
-  //         description: target.description,
-  //         id: target.id,
-  //         code: e,
-  //         formulation: target.formulation,
-  //         related_parameters: target.related_parameters,
-  //         related_variables: target.related_variables,
-  //     });
-  // };
-
-  // const updateTargets = (code) => {
-  //     const updatedTarget = {
-  //         description: target.description,
-  //         id: target.id,
-  //         code: code,
-  //         formulation: target.formulation,
-  //         related_parameters: target.related_parameters,
-  //         related_variables: target.related_variables,
-  //     };
-  //     updateTarget(targetKey, updatedTarget);
-  // };
-
-  // const handleFormulateClick = () => {
-  //     // send a query to the backend to formulate the target
-  //     setIsLoading(true);
-  //     setIsAnyLoading(true);
-  //     fetch(process.env.REACT_APP_BACKEND_URL + "/codeTarget", {
-  //         method: "POST",
-  //         headers: {
-  //             "Content-Type": "application/json",
-  //         },
-  //         body: JSON.stringify({
-  //             target: target,
-  //             target_type: targetType,
-  //             parameters: parameters,
-  //             variables: variables,
-  //         }),
-  //     })
-  //         .then((response) => response.json())
-  //         .then((data) => {
-  //             console.log("Success:", JSON.stringify(data));
-  //             setIsLoading(false);
-  //             setIsAnyLoading(false);
-  //             updateTargets(data.target.code);
-  //             setVariables(data.variables);
-  //         })
-  //         .catch((error) => {
-  //             alert("Can't fetch the results :( Error: " + error);
-  //             console.error("Error:", error);
-  //             setIsLoading(false);
-  //             setIsAnyLoading(false);
-  //         });
-  // };
-
   return (
     <div className="flex flex-col w-full">
       <div className="flex flex-row w-full mb-5">

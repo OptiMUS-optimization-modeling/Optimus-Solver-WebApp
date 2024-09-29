@@ -113,8 +113,11 @@ const CodingPage = ({
         console.log("Success:", JSON.stringify(data));
         // updateTargets(data.target);
         // setVariables(data.variables);
-        updateProject();
-        setIsAnyLoading(false);
+        setTimeout(() => {
+          updateProject();
+          setIsAnyLoading(false);
+          resolve(); // Resolve the promise when the fetch is successfulresolve(); // Resolve the promise when the fetch is successful
+        }, 500);
       };
       const errorCallback = (error) => {
         setIsAnyLoading(false);
@@ -159,20 +162,18 @@ const CodingPage = ({
     //     for (const constraint of project.constraints) {
     //         await handleCodeClick(constraint, "constraint");
     //     }
-
+    let new_project = project;
     try {
-      const objectivePromises = project.objective.map((obj) =>
-        handleCodeClick(obj, "objective")
-      );
-      const constraintPromises = project.constraints.map((constraint) =>
-        handleCodeClick(constraint, "constraint")
-      );
-
-      // Combine all promises into a single array
-      const allPromises = [...objectivePromises, ...constraintPromises];
-
-      // Use Promise.all to wait for all of them to complete
-      await Promise.all(allPromises);
+      for (const obj of project.objective) {
+        await handleCodeClick(obj, "objective");
+        let new_project = await updateProject();
+      }
+      for (const constraint of project.constraints) {
+        await handleCodeClick(constraint, "constraint");
+        let new_project = await updateProject();
+      }
+      // Ensure project is updated after all formulations
+      await updateProject(); // Ensure this is awaited to get the latest project
     } catch (error) {
       setModalTitle("Error");
       setModalContent("Can't connect to the server :(");

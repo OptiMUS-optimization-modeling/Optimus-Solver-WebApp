@@ -187,18 +187,14 @@ const FormulationPage = ({
     let currentVariables = project.variables;
     try {
       for (const obj of project.objective) {
-        console.log("start:", currentVariables);
         await handleFormulateClick(obj, "objective", currentVariables);
         let new_project = await updateProject();
         currentVariables = new_project.variables;
-        console.log("end:", currentVariables);
       }
       for (const constraint of project.constraints) {
-        console.log("start:", currentVariables);
         await handleFormulateClick(constraint, "constraint", currentVariables);
         let new_project = await updateProject();
         currentVariables = new_project.variables;
-        console.log("end:", currentVariables);
       }
       // Ensure project is updated after all formulations
       await updateProject(); // Ensure this is awaited to get the latest project
