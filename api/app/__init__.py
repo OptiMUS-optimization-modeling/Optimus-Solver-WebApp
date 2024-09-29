@@ -82,20 +82,20 @@ def create_app():
     app.register_blueprint(projects.bp, url_prefix="/api/projects")
     app.register_blueprint(new_routes.bp, url_prefix="/api/new_api")
 
-    # # Serve React App
-    # @app.route("/")
-    # def serve():
-    #     print(f"Serving index.html from {app.static_folder}")
-    #     return send_from_directory(app.static_folder, "index.html")
+    # Serve React App
+    @app.route("/")
+    def serve():
+        print(f"Serving index.html from {app.static_folder}")
+        return send_from_directory(app.static_folder, "index.html")
 
-    # @app.route("/<path:path>")
-    # def serve_static(path):
-    #     if os.path.exists(os.path.join(app.static_folder, path)):
-    #         print(f"Serving {path} from {app.static_folder}")
-    #         return send_from_directory(app.static_folder, path)
-    #     else:
-    #         print(f"Path {path} not found. Serving index.html from {app.static_folder}")
-    #         return send_from_directory(app.static_folder, "index.html")
+    @app.route("/<path:path>")
+    def serve_static(path):
+        if os.path.exists(os.path.join(app.static_folder, path)):
+            print(f"Serving {path} from {app.static_folder}")
+            return send_from_directory(app.static_folder, path)
+        else:
+            print(f"Path {path} not found. Serving index.html from {app.static_folder}")
+            return send_from_directory(app.static_folder, "index.html")
 
     return app
 
