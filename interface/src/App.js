@@ -1,5 +1,10 @@
 import "./App.css";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  Navigate,
+} from "react-router-dom";
 import LoginPage from "./Pages/Auth/Login"; // Your login component
 import SignupPage from "./Pages/Auth/Signup"; // Your signup component
 import MainApp from "./Pages/MainApp/MainApp"; // Your main component
@@ -47,6 +52,7 @@ function App() {
       />
       <AuthHandler>
         <Routes>
+          <Route path="/" element={<Navigate to="/dashboard" />} />
           <Route
             path="/signup"
             element={<SignupPage isDark={isDark} setIsDark={setIsDark} />}
