@@ -23,19 +23,19 @@ Endpoint to extract parameters from the natural language description of the prob
         }
     },
     "problem_summary": str,
-    "reformatted_description": str
+    "formatted_description": str
 }
 ```
 
 ### /extract_clauses
 
-Endpoint to extract clauses from the reformatted natural language description of the problem
+Endpoint to extract clauses from the formatted natural language description of the problem
 
 **Args:**
 
 ```json
 {
-    "reformatted_description": str,
+    "formatted_description": str,
     "problem_summary": str,
     "parameters": {
         <str:symbol>: {
@@ -149,7 +149,7 @@ related_parameters should be self-contained (it should cover all parameters that
 ```json
 {
     "problem_description": str,
-    "reformatted_problem_description": str,
+    "formatted_problem_description": str,
     "problem_summary": str,
     "parameters": {
         <int:parameter_id>: {
@@ -181,8 +181,8 @@ related_parameters should be self-contained (it should cover all parameters that
 
 # Tasks:
 
--   Create Github pages and documentations
--   Create a heroku instance connected to the main branch of the
--   Buy and park a domain on it
--   Create the frontend
--   Create a PyPi library for the interface
+- Create Github pages and documentations
+- Create a heroku instance connected to the main branch of the
+- Buy and park a domain on it
+- Create the frontend
+- Create a PyPi library for the interface
