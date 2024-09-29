@@ -190,7 +190,7 @@ const MainContainer = ({
 
   return (
     <div className="flex-box mx-auto w-full mb-20 mt-5 px-10">
-      <div>
+      <div className="content-area">
         {currentStep === 0 && (
           <div className={currentStep === 0 ? "fade-in" : ""}>
             <AnalysisContainer
@@ -242,17 +242,9 @@ const MainContainer = ({
               isAnyLoading={isAnyLoading}
               setIsAnyLoading={setIsAnyLoading}
               setCurrentStep={setCurrentStep}
-              // constraints={constraints}
-              // setConstraints={setConstraints}
-              // objective={objective}
-              // setObjective={setObjective}
-              // background={background}
               parameters={parameters}
               variables={variables}
-              // setVariables={setVariables}
-              // modalTitle={modalTitle}
               setModalTitle={setModalTitle}
-              // modalContent={modalContent}
               setModalContent={setModalContent}
               project={project}
               updateProject={updateProject}

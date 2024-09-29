@@ -54,106 +54,6 @@ function MainApp({ isDark, setIsDark }) {
     updateProject();
   }, [project_id, updateProject]);
 
-  // // ================================================
-  // // Problem description
-  // // ================================================
-
-  // const [problemDescription, setProblemDescription] = useState(
-  //     () => JSON.parse(localStorage.getItem("problemDescription")) || ""
-  // );
-
-  // useEffect(() => {
-  //     localStorage.setItem(
-  //         "problemDescription",
-  //         JSON.stringify(problemDescription)
-  //     );
-  // }, [problemDescription]);
-
-  // // ================================================
-  // // Formatted description
-  // // ================================================
-  // const [formattedDescription, setFormattedDescription] = useState(
-  //     () => JSON.parse(localStorage.getItem("formattedDescription")) || ""
-  // );
-
-  // useEffect(() => {
-  //     localStorage.setItem(
-  //         "formattedDescription",
-  //         JSON.stringify(formattedDescription)
-  //     );
-  // }, [formattedDescription]);
-
-  // // ================================================
-  // // Parameters
-  // // ================================================
-  // const [parameters, setParameters] = useState(
-  //     () => JSON.parse(localStorage.getItem("parameters")) || []
-  // );
-
-  // useEffect(() => {
-  //     localStorage.setItem("parameters", JSON.stringify(parameters));
-  // }, [parameters]);
-
-  // // ================================================
-  // // Constraints
-  // // ================================================
-  // const [constraints, setConstraints] = useState(
-  //     () => JSON.parse(localStorage.getItem("constraints")) || []
-  // );
-
-  // useEffect(() => {
-  //     localStorage.setItem("constraints", JSON.stringify(constraints));
-  // }, [constraints]);
-
-  // // ================================================
-  // // Objective
-  // // ================================================
-  // const [objective, setObjective] = useState(
-  //     () =>
-  //         JSON.parse(localStorage.getItem("objective")) || [
-  //             {
-  //                 id: 0,
-  //                 formulation: "",
-  //                 code: "",
-  //                 description: "",
-  //             },
-  //         ]
-  // );
-
-  // useEffect(() => {
-  //     localStorage.setItem("objective", JSON.stringify(objective));
-  // }, [objective]);
-
-  // // ================================================
-  // // Background
-  // // ================================================
-  // const [background, setBackground] = useState(
-  //     () => JSON.parse(localStorage.getItem("background")) || []
-  // );
-
-  // useEffect(() => {
-  //     localStorage.setItem("background", JSON.stringify(background));
-  // }, [background]);
-
-  // // ================================================
-  // // Variables
-  // // ================================================
-  // const [variables, setVariables] = useState(
-  //     () => JSON.parse(localStorage.getItem("variables")) || {}
-  // );
-
-  // // // force reset variables
-  // // useEffect(() => {
-  // //     setVariables({});
-  // // }, [variables]);
-
-  // useEffect(() => {
-  //     localStorage.setItem("variables", JSON.stringify(variables));
-  // }, [variables]);
-
-  // // ================================================
-  // // Data
-  // // ================================================
   const [data, setData] = useState(
     () => JSON.parse(localStorage.getItem("data")) || {}
   );
@@ -166,9 +66,9 @@ function MainApp({ isDark, setIsDark }) {
   // // Results
   // // ================================================
 
-  // const [results, setResults] = useState(
-  //     () => JSON.parse(localStorage.getItem("results")) || ""
-  // );
+  const [results, setResults] = useState(
+    () => JSON.parse(localStorage.getItem("results")) || ""
+  );
 
   // useEffect(() => {
   //     localStorage.setItem("results", JSON.stringify(results));
@@ -263,8 +163,8 @@ function MainApp({ isDark, setIsDark }) {
           // setVariables={setVariables}
           data={data}
           setData={setData}
-          // results={results}
-          // setResults={setResults}
+          results={results}
+          setResults={setResults}
           // userId={userId}
           resetState={resetState}
           // dataButtonContent={dataButtonContent}
@@ -274,13 +174,13 @@ function MainApp({ isDark, setIsDark }) {
         />
       </div>
 
-      <div className="drawer-side">
+      <div className="drawer-side h-100">
         <label
           htmlFor="my-drawer-2"
           aria-label="close sidebar"
           className="drawer-overlay"
         ></label>
-        <aside className="bg-base-100 w-70 justify-between flex flex-col h-full">
+        <aside className="bg-base-100 w-70 justify-between flex flex-col h-full ">
           <div>
             <div className="h-4"> </div>
             <div className="flex flex-col justify-center pl-10">
@@ -290,7 +190,7 @@ function MainApp({ isDark, setIsDark }) {
               />
             </div>
           </div>
-          <div className="flex flex-col justify-center items-center mb-5">
+          <div className="flex flex-col justify-center items-center mb-5 ml-5">
             {/* <button
                             className="btn btn-primary w-3/4"
                             onClick={() => {

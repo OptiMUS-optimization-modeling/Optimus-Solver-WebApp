@@ -277,6 +277,17 @@ def get_full_code():
     objective = project_data.get("objective", {})
     variables = project_data.get("variables", {})
 
+    # iterate over variables and generate the code for the ones that don't have it
+    for v in variables:
+        variable = variables[v]
+        if "code" not in variable or not variable["code"]:
+            variable["code"] = (
+                f"{variable['symbol']} = model.addVar(name='{variable['symbol']}', vtype=gp.GRB.{variable['type'].upper()})"
+            )
+
+    # Update the project with the modified variables
+    project.update({"variables": variables})
+
     state = {
         "parameters": parameters,
         "constraints": constraints,
@@ -338,6 +349,7 @@ def get_run_results():
         "data_json_path": f"{path}/data.json",
     }
 
+    print(json.dumps(state, indent=4))
     try:
         state = prep_problem_json(state)
         run_result = run_code(

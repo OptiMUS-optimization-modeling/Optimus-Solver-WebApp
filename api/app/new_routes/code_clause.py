@@ -66,6 +66,9 @@ def code_clause(data):
     problemSummary = data["problemSummary"]
     solver = data["solver"]
 
+    print("related_variables ", related_variables)
+    print("related_parameters ", related_parameters)
+
     prompt = prompt_template.format(
         solver=solver,
         clauseType=clause_type,
@@ -87,7 +90,7 @@ def code_clause(data):
             [
                 {
                     "definition": related_parameters[p]["definition"],
-                    "symbol": p,
+                    "symbol": related_parameters[p]["symbol"],
                     "shape": related_parameters[p]["shape"],
                 }
                 for p in related_parameters
@@ -96,6 +99,8 @@ def code_clause(data):
         ),
         problemSummary=problemSummary,
     )
+
+    print("SSSS ", prompt)
 
     res = structured_llm.invoke(prompt)
 
