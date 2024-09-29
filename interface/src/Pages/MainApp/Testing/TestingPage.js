@@ -222,7 +222,6 @@ const TestingPage = ({
   return (
     // put items at top
     <div className="flex flex-col items-center">
-      {JSON.stringify(project)}
       <div className="flex flex-row justify-between items-start w-ninety mt-10">
         <div class="flex flex-col w-2/3 pr-10">
           {/* print all ids of constriants */}
