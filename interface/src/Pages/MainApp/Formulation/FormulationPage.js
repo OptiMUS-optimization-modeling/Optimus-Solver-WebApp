@@ -134,14 +134,18 @@ const FormulationPage = ({
     }
   };
 
-  const handleFormulateClick = (target, targetType) => {
+  const handleFormulateClick = (target, targetType, currentVariables) => {
     return new Promise((resolve, reject) => {
       // send a query to the backend to formulate the target
       setIsAnyLoading(true);
       let callback = (data) => {
-        updateProject();
-        setIsAnyLoading(false);
-        resolve(); // Resolve the promise when the fetch is successful
+        console.log("DONE FORMULATING");
+        setTimeout(() => {
+          updateProject();
+          setIsAnyLoading(false);
+          updateProject();
+          resolve(); // Resolve the promise when the fetch is successfulresolve(); // Resolve the promise when the fetch is successful
+        }, 500);
       };
       let errorCallback = (error) => {
         setIsAnyLoading(false);
@@ -154,6 +158,10 @@ const FormulationPage = ({
         modal.showModal();
         reject(error); // Reject the promise on error
       };
+
+      if (Object.keys(currentVariables).length === 0) {
+        currentVariables = project.variables;
+      }
       sendPollingRequest(
         {
           "Content-Type": "application/json",
@@ -163,7 +171,7 @@ const FormulationPage = ({
           clauseType: targetType,
           project_id: project.id,
           parameters: project.parameters,
-          variables: project.variables,
+          variables: currentVariables,
           problemSummary: project.problemSummary,
         },
         "/new_api/formulate_clause",
@@ -175,18 +183,25 @@ const FormulationPage = ({
   };
 
   const formulateAll = async () => {
-    // do handleFormulateClick for all the targets in sequence (asynchronously)
     setIsAnyLoading(true);
-    // let currentVariables = project.variables;
+    let currentVariables = project.variables;
     try {
       for (const obj of project.objective) {
-        // console.log("start:", currentVariables);
-        await handleFormulateClick(obj, "objective");
+        console.log("start:", currentVariables);
+        await handleFormulateClick(obj, "objective", currentVariables);
+        let new_project = await updateProject();
+        currentVariables = new_project.variables;
+        console.log("end:", currentVariables);
       }
       for (const constraint of project.constraints) {
-        // console.log("start:", currentVariables);
-        await handleFormulateClick(constraint, "constraint");
+        console.log("start:", currentVariables);
+        await handleFormulateClick(constraint, "constraint", currentVariables);
+        let new_project = await updateProject();
+        currentVariables = new_project.variables;
+        console.log("end:", currentVariables);
       }
+      // Ensure project is updated after all formulations
+      await updateProject(); // Ensure this is awaited to get the latest project
     } catch (error) {
       setModalTitle("Error");
       setModalContent("Can't connect to the server :(");

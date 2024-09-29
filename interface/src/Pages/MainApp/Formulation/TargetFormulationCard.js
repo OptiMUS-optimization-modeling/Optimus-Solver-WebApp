@@ -33,7 +33,7 @@ const TargetFormulationCard = ({
               className="btn btn-primary btn-sm"
               onClick={() => {
                 setIsLoading(true);
-                handleFormulateClick(target, targetType)
+                handleFormulateClick(target, targetType, {})
                   .then(() => {
                     setIsLoading(false);
                   })

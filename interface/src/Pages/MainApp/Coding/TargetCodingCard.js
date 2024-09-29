@@ -84,8 +84,6 @@ const TargetCodingCard = ({
 
   return (
     <div className="flex flex-col w-full">
-      {JSON.stringify(isAnyLoading)}, {JSON.stringify(isCodeAllLoading)},
-      {JSON.stringify(isLoading)}
       <div className="flex flex-row w-full mb-5">
         <div className="flex flex-col w-1/2 items-start justify-center max-w-1/2 border rounded-box p-4 mt-2 mr-4 overflow-x-auto">
           <div className="flex flex-col w-full items-start justify-center max-w-1/2 overflow-x-auto">

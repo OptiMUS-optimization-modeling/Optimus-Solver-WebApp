@@ -3,7 +3,7 @@ import json
 
 import threading
 from copy import deepcopy
-
+import time
 from api.app.utils.misc import get_unique_id
 from api.app.utils.communication import process_with_retries
 
@@ -59,6 +59,8 @@ def extract_params_wrapper(user_id, project_id, data):
         }
     )
 
+    time.sleep(0.5)
+
 
 def extract_clauses_wrapper(user_id, project_id, data):
     res = extract_clauses(data)
@@ -89,6 +91,8 @@ def extract_clauses_wrapper(user_id, project_id, data):
             ],
         }
     )
+
+    time.sleep(0.5)
 
 
 def formulate_clause_wrapper(user_id, project_id, data):
@@ -178,6 +182,8 @@ def formulate_clause_wrapper(user_id, project_id, data):
                 )
         project.update({"constraints": constraints})
 
+    time.sleep(0.5)
+
 
 def code_clause_wrapper(user_id, project_id, data):
     clause_type = data["clauseType"]
@@ -247,6 +253,8 @@ def code_clause_wrapper(user_id, project_id, data):
                     }
                 )
         project.update({"constraints": constraints})
+
+    time.sleep(0.5)
 
 
 @bp.route("/extract_params", methods=["POST"])

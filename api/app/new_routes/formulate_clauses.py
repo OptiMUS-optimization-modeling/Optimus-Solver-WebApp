@@ -29,6 +29,7 @@ Take a deep breath and explain how we should define the {clauseType}. Feel free 
 
 - Your formulation should be in LaTeX mathematical format (do not include the $ symbols).
 - Use CamelCase and full words for symbols, and do not include indices in the symbol (e.g. ItemsSold instead of itemsSold or items_sold or ItemsSold_i)
+- Consider the list of existing variables carefully, and do not define the same variable twice.
 - Only model the {clauseType}.
 
 """
@@ -69,6 +70,11 @@ structured_llm = llm.with_structured_output(FormulatedClause)
 
 
 def formulate_clause(data):
+
+    print("-----")
+    print("data ", json.dumps(data, indent=4))
+    print("-----")
+
     clause_type = data["clauseType"]
     parameters = data["parameters"]
     variables = data["variables"]

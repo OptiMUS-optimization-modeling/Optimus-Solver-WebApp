@@ -9,6 +9,8 @@ Here is the description of the problem:
 You should read and understand the problem and identify 1) implicit constraints (e.g. number of items produced can not be negative), 2) explicit constraints, and 3) the objective. 
 
 - Do not combine multiple constraints into one constraint. 
+- Do not include any claues related to variable integrality (e.g. integer or binary variables). We will cover those in the variable definition step.
+
 - The constraint should be in natural language, not mathematical (e.g. "The number of items produced should be less than the number of items sold, as opposed to itemsProduced <= itemsSold")
 
 Take a deep breath, and solve the problem step by step.
