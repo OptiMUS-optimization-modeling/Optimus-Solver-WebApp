@@ -8,8 +8,6 @@ This repo contains the code for backend and frontend of [OptiMUS Solver Web App]
 
 The backend, built with Flask, is located in the [`api/`](api/) directory. The frontend, a React application, can be found in the [`app/`](app/) directory.
 
-## API Endpoints
-
 ## Dataset
 
 You can download the dataset from https://nlp4lp.vercel.app/. Please note that NLP4LP is intended and licensed for research use only. The dataset is CC BY NC 4.0 (allowing only non-commercial use) and models trained using the dataset should not be used outside of research purposes (The updated version will be added soon).
