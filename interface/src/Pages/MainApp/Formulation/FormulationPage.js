@@ -172,9 +172,9 @@ const FormulationPage = ({
           project_id: project.id,
           parameters: project.parameters,
           variables: currentVariables,
-          problemSummary: project.problemSummary,
+          background: project.background,
         },
-        "/new_api/formulate_clause",
+        "/formulate_clause",
         "POST",
         callback,
         errorCallback

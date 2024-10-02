@@ -85,7 +85,7 @@ const MainContainer = ({
         .then((response) => response.json())
         .then((data) => {
           if (data.error) {
-            alert(data.error);
+            console.log(data.error);
             return;
           }
           console.log("Success:", data);
@@ -93,11 +93,11 @@ const MainContainer = ({
         })
         .catch((error) => {
           console.error("Error:", error);
-          alert("Can't fetch the results :( Error: " + error);
+          console.log("Can't fetch the results :( Error: " + error);
         });
     } catch (error) {
       console.error("Error updating background:", error);
-      alert("Error updating background!");
+      console.log("Error updating background!");
     }
   };
 

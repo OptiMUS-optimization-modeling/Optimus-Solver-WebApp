@@ -4,3 +4,4 @@ api/.env
 interface/.env
 .env
 interface/build
+tmpData/

@@ -5,7 +5,7 @@ function Navigator({ currentStep, setCurrentStep }) {
     { label: "Description", color: currentStep >= 0 ? "primary" : "" },
     { label: "Parameters", color: currentStep >= 1 ? "primary" : "" },
     {
-      label: "Claues",
+      label: "Clauses",
       color: currentStep >= 2 ? "primary" : "",
     },
     {

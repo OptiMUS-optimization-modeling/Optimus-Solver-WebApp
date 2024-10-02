@@ -140,10 +140,10 @@ const CodingPage = ({
           project_id: project.id,
           relatedVariables: project.variables,
           relatedParameters: project.parameters,
-          problemSummary: project.problemSummary,
+          background: project.background,
           solver: project.solver,
         },
-        "/new_api/code_clause",
+        "/codeClause",
         "POST",
         callback,
         errorCallback

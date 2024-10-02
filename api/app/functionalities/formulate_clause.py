@@ -4,7 +4,7 @@ You are an expert mathematical formulator and an optimization professor at a top
 Here is a summary of the problem:
 
 -----
-{problemSummary}
+{background}
 -----
 
 Here's a {clauseType} we need you to model:
@@ -71,14 +71,10 @@ structured_llm = llm.with_structured_output(FormulatedClause)
 
 def formulate_clause(data):
 
-    print("-----")
-    print("data ", json.dumps(data, indent=4))
-    print("-----")
-
     clause_type = data["clauseType"]
     parameters = data["parameters"]
     variables = data["variables"]
-    problemSummary = data["problemSummary"]
+    background = data["background"]
 
     prompt = prompt_template.format(
         clauseType=clause_type,
@@ -106,7 +102,7 @@ def formulate_clause(data):
             ],
             indent=4,
         ),
-        problemSummary=problemSummary,
+        background=background,
     )
 
     res = structured_llm.invoke(prompt)

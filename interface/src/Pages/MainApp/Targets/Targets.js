@@ -16,7 +16,7 @@ const TargetExtractionPage = ({
   const [tmpDescription, setTmpDescription] = useState(
     project.formattedDescription
   );
-  const [tmpBackground, setTmpBackground] = useState(project.problemSummary);
+  const [tmpBackground, setTmpBackground] = useState(project.background);
   const [tmpObjectiveDescription, setTmpObjectiveDescription] = useState(
     project.objective?.[0]?.description || ""
   );
@@ -116,7 +116,7 @@ const TargetExtractionPage = ({
         project_id: project.id,
         formattedDescription: tmpDescription,
       },
-      "/new_api/extract_clauses",
+      "/extract_clauses",
       "POST",
       callback,
       errorCallback

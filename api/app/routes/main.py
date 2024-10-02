@@ -9,9 +9,5 @@ bp = Blueprint("main", __name__)
 
 
 @bp.route("/", methods=["GET"])
-# @login_required
 def main_page():
-    # user_id = session.get("user_id")
-    # if not user_id:
-    #     return redirect(url_for("login"))
     return jsonify({"message": "Welcome to the main page!"})

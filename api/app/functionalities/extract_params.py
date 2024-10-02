@@ -44,7 +44,7 @@ class FormattedProblem(BaseModel):
     formattedDescription: str = Field(
         description="The formatted problem description where the problem statement has been rewritten to use the accurate parameter symbols."
     )
-    problemSummary: str = Field(description="A 2-3 sentence summary of the problem.")
+    background: str = Field(description="A 2-3 sentence summary of the problem.")
 
 
 structured_llm = llm.with_structured_output(FormattedProblem)
@@ -65,7 +65,7 @@ def extract_params(data):
             for p in res.parameters
         },
         "formattedDescription": res.formattedDescription,
-        "problemSummary": res.problemSummary,
+        "background": res.background,
     }
 
     return output

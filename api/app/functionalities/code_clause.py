@@ -17,7 +17,7 @@ Here's the list of parameters:
 {relatedParameters}
 
 Here's the problem summary:
-{problemSummary}
+{background}
 
 Assume the parameters and variables are already defined and added to the model, gurobipy is imported as gp, and the model is named model. Generate the code needed to define the {clauseType} and add it to the model accordingly.
 
@@ -64,7 +64,7 @@ def code_clause(data):
     related_variables = data["relatedVariables"]
     related_parameters = data["relatedParameters"]
 
-    problemSummary = data["problemSummary"]
+    background = data["background"]
     solver = data["solver"]
 
     print("related_variables ", related_variables)
@@ -98,7 +98,7 @@ def code_clause(data):
             ],
             indent=4,
         ),
-        problemSummary=problemSummary,
+        background=background,
     )
 
     res = structured_llm.invoke(prompt)

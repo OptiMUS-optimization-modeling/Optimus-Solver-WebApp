@@ -6,17 +6,19 @@ from firebase_admin import credentials, auth
 import os
 from redis import Redis
 
-from .routes.parameters import scan_parameters, process_data
-from .routes.targets import extraction
+from .routes.analysis import analyze
+
+from .routes.data import scan_parameters, process_data
+from .routes.analysis import analyze
+from .routes.clauses import clause_extraction
 from .routes.formulation import formulation
 from .routes.coding import coding
 from .routes.evaluation import evaluation
 from .routes.auth import auth
 from .routes.projects import projects
 
-from .new_routes import new_routes
 
-from .routes import main, analyze, misc
+from .routes import main, misc
 from .utils.setup import get_clients
 
 
@@ -73,14 +75,13 @@ def create_app():
     app.register_blueprint(analyze.bp, url_prefix="/api")
     app.register_blueprint(scan_parameters.bp, url_prefix="/api")
     app.register_blueprint(process_data.bp, url_prefix="/api")
-    app.register_blueprint(extraction.bp, url_prefix="/api")
+    app.register_blueprint(clause_extraction.bp, url_prefix="/api")
     app.register_blueprint(formulation.bp, url_prefix="/api")
     app.register_blueprint(coding.bp, url_prefix="/api")
     app.register_blueprint(evaluation.bp, url_prefix="/api")
     app.register_blueprint(misc.bp, url_prefix="/api")
     app.register_blueprint(auth.bp, url_prefix="/api/auth")
     app.register_blueprint(projects.bp, url_prefix="/api/projects")
-    app.register_blueprint(new_routes.bp, url_prefix="/api/new_api")
 
     # Serve React App
     @app.route("/")

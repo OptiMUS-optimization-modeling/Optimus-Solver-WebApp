@@ -74,7 +74,7 @@ const AnalysisContainer = ({
         project_id: project.id,
         problemDescription: tmpDescription,
       },
-      "/new_api/extract_params",
+      "/extract_params",
       "POST",
       callback,
       errorCallback
