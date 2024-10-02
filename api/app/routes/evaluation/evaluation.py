@@ -266,6 +266,7 @@ def get_full_code():
     # constraints = request.json["constraints"]
     # objective = request.json["objective"]
     # variables = request.json["variables"]
+
     solver = "gurobipy"  # TODO: make this a parameter
     # data = request.json["data"]
     project_id = request.json["project_id"]
@@ -307,6 +308,8 @@ def get_full_code():
     except Exception as e:
         code = "ERROR!: " + str(e)
         print(e)
+
+    project.update({"code": code})
 
     return {"code": code}, 200
 
@@ -465,3 +468,22 @@ def get_fixed_code():
     athread.start()
 
     return jsonify({"received": True, "request_id": request_id}), 200
+
+
+@bp.route("/updateCode", methods=["POST"])
+@login_required
+@check_project_ownership
+def update_code():
+    project_id = request.json["project_id"]
+    new_code = request.json["code"]
+    db = current_app.clients["firestore_client"]
+    project = db.collection("projects").document(project_id)
+
+    try:
+        project.update({"code": new_code})
+        return (
+            jsonify({"status": "success", "message": "Code updated successfully"}),
+            200,
+        )
+    except Exception as e:
+        return jsonify({"status": "error", "message": str(e)}), 500

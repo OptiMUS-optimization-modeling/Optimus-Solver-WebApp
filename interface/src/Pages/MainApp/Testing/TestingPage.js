@@ -11,22 +11,12 @@ import "./Testing.css";
 
 const TestingPage = ({
   isDark,
-  // parameters,
-  // variables,
-  // setVariables,
   currentStep,
   setCurrentStep,
-  // constraints,
-  // setConstraints,
-  // objective,
-  // setObjective,
-  // background,
   data,
   results,
   setResults,
-  // modalTitle,
   setModalTitle,
-  // modalContent,
   setModalContent,
   project,
   updateProject,
@@ -34,35 +24,35 @@ const TestingPage = ({
   const theme = isDark ? "tomorrow_night" : "tomorrow";
   const [isRunLoading, setIsRunLoading] = React.useState(false);
   const [isFixLoading, setIsFixLoading] = React.useState(false);
+  const [isSynthesizeLoading, setIsSynthesizeLoading] = React.useState(false);
 
-  let [code, setCode] = React.useState("");
+  let [code, setCode] = React.useState(project.code);
 
-  // fetch the code when currentStep changes to 5
-
-  React.useEffect(() => {
-    if (currentStep === 6) {
-      fetch(process.env.REACT_APP_BACKEND_URL + "/getFullCode", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        credentials: "include",
-        body: JSON.stringify({
-          data: data,
-          project_id: project.id,
-        }),
+  const handleSynthesizeCodeClick = () => {
+    setIsSynthesizeLoading(true);
+    fetch(process.env.REACT_APP_BACKEND_URL + "/getFullCode", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      credentials: "include",
+      body: JSON.stringify({
+        data: data,
+        project_id: project.id,
+      }),
+    })
+      .then((response) => response.json())
+      .then((res) => {
+        console.log("Synthesize Success:", res);
+        setCode(res.code);
+        updateProject();
+        setIsSynthesizeLoading(false);
       })
-        .then((response) => response.json())
-        .then((res) => {
-          console.log("Success:", res);
-          setCode(res.code);
-        })
-        .catch((error) => {
-          console.error("Error:", error);
-          // alert("Can't fetch the results :( Error: " + error);
-        });
-    }
-  }, [currentStep, data, project.id]); // Added 'data' and 'project.id' to the dependency array
+      .catch((error) => {
+        console.error("Synthesize Error:", error);
+        setIsSynthesizeLoading(false);
+      });
+  };
 
   const handleRunCodeClick = () => {
     if (Object.keys(data).length === 0) {
@@ -107,11 +97,9 @@ const TestingPage = ({
     })
       .then((response) => response.json())
       .then((data) => {
-        console.log("Success:", JSON.stringify(data, null, 2));
+        console.log("Run Success:", JSON.stringify(data, null, 2));
         setIsRunLoading(false);
         if (data.run_result.success === false) {
-          // make the error message bold
-
           let error_str =
             "ERROR: " +
             data.run_result.error_message +
@@ -121,17 +109,9 @@ const TestingPage = ({
 
           if (error_str) {
             setResults(error_str);
-          } else {
           }
 
-          // Removed unused variable 'state'
-          // let state = data.state;
-
-          // update the variables, constraints, and objective based on the state
           updateProject();
-          // setVariables(state.variables);
-          // setConstraints(state.constraints);
-          // setObjective(state.objective);
 
           return;
         } else {
@@ -150,9 +130,7 @@ const TestingPage = ({
                 {data.run_result.solving_info.variables.map((variable) => {
                   return (
                     <li>
-                      {variable.symbol}:{" "}
-                      {/* value with at most 4 decimal places */}
-                      {variable.value.toFixed(4)}
+                      {variable.symbol}: {variable.value.toFixed(4)}
                     </li>
                   );
                 })}
@@ -164,8 +142,7 @@ const TestingPage = ({
       })
       .catch((error) => {
         setIsRunLoading(false);
-        // alert("Can't fetch the results :( Error: " + error);
-        console.error("Error:", error);
+        console.error("Run Error:", error);
       });
   };
 
@@ -173,12 +150,7 @@ const TestingPage = ({
     setIsFixLoading(true);
 
     const callback = (data) => {
-      // setParameters(data.parameters);
-
-      console.log("Success:", data);
-      // setVariables(data.variables);
-      // setConstraints(data.constraints);
-      // setObjective(data.objective);
+      console.log("Fix Success:", data);
       updateProject();
       setIsFixLoading(false);
       let explanation = data.bug_explanation;
@@ -197,7 +169,7 @@ const TestingPage = ({
     };
 
     const errorCallback = (error) => {
-      console.error("Error:", error);
+      console.error("Fix Error:", error);
       setIsFixLoading(false);
     };
 
@@ -206,10 +178,6 @@ const TestingPage = ({
         "Content-Type": "application/json",
       },
       {
-        // parameters: parameters,
-        // variables: variables,
-        // constraints: constraints,
-        // objective: objective,
         data: data,
       },
       "/fixCode",
@@ -219,38 +187,63 @@ const TestingPage = ({
     );
   };
 
+  const handleCodeChange = (newCode) => {
+    setCode(newCode);
+  };
+
+  const handleCodeBlur = () => {
+    fetch(process.env.REACT_APP_BACKEND_URL + "/updateCode", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      credentials: "include",
+      body: JSON.stringify({
+        code: code,
+        project_id: project.id,
+      }),
+    })
+      .then((response) => response.json())
+      .then((res) => {
+        console.log("Code Update Success:", res);
+        updateProject();
+      })
+      .catch((error) => {
+        console.error("Code Update Error:", error);
+      });
+  };
+
   return (
-    // put items at top
     <div className="flex flex-col items-center">
       <div className="flex flex-row justify-between items-start w-ninety mt-10">
-        <div class="flex flex-col w-2/3 pr-10">
-          {/* print all ids of constriants */}
-
-          <div class="flex flex-col w-full">
-            <h1 className="text-xl mb-2">Full Code (Read Only)</h1>
+        <div className="flex flex-col w-2/3 pr-10">
+          <div className="flex flex-col w-full">
+            <h1 className="text-xl mb-2">Full Code</h1>
           </div>
 
           <div className="code-box w-full bg-base-300 border rounded-box p-4 mt-2">
             <AceEditor
               mode="python"
               theme={theme}
-              readOnly={true}
+              readOnly={false}
               name="test"
               editorProps={{ $blockScrolling: true }}
               value={code}
-              style={{ height: "100%", width: "100%" }} // Set the fixed height here
+              onChange={handleCodeChange}
+              onBlur={handleCodeBlur}
+              style={{ height: "100%", width: "100%" }}
               wrapEnabled={true}
             />
           </div>
         </div>
-        <div class="flex flex-col w-1/3">
-          <div class="flex flex-col w-full">
+        <div className="flex flex-col w-1/3">
+          <div className="flex flex-col w-full">
             <h1 className="text-xl mb-2">Results</h1>
-            <div className="result-box  border rounded-box p-4 mt-2 text-sm  overflow-y-auto mockup-code w-full ">
+            <div className="result-box border rounded-box p-4 mt-2 text-sm overflow-y-auto mockup-code w-full">
               <code className="overflow-y-auto">{results}</code>
             </div>
           </div>
-          <div class="flex flex-col w-full">
+          <div className="flex flex-col w-full">
             <h1 className="text-xl mb-2 mt-10">OptiMUS Log</h1>
             <div className="result-box w-full bg-base-300 border rounded-box p-4 mt-2 flex justify-center items-center">
               <h1>Will be added soon!</h1>
@@ -259,22 +252,38 @@ const TestingPage = ({
         </div>
       </div>
       <div className="flex flex-row justify-between items-start w-ninety mt-10">
-        <div class="flex flex-col w-2/3 pr-10">
-          {/* butotn for running the code */}
+        <div className="flex flex-row justify-between w-2/3 pr-10">
+          {/* Synthesize Code Button */}
           <button
-            className="btn btn-primary w-full"
-            onClick={handleRunCodeClick}
-            disabled={isRunLoading}
+            className="btn btn-secondary w-1/2"
+            onClick={handleSynthesizeCodeClick}
+            disabled={isSynthesizeLoading}
           >
-            Run Code
+            {isSynthesizeLoading ? (
+              <span className="loading loading-spinner loading-md"></span>
+            ) : (
+              "Synthesize Full Code from Clause Codes"
+            )}
+          </button>
+          {/* Run Code Button */}
+          <button
+            className="btn btn-primary w-1/3"
+            onClick={handleRunCodeClick}
+            disabled={isRunLoading || !code}
+          >
+            {isRunLoading ? (
+              <span className="loading loading-dots loading-lg mt-1"></span>
+            ) : (
+              "Run Code"
+            )}
           </button>
         </div>
-        <div class="flex flex-col w-1/3">
-          {/* butotn for running the code */}
+        <div className="flex flex-col w-1/3">
+          {/* Fix Code Button */}
           <button
             className="btn btn-primary w-full"
             onClick={handleFixCodeClick}
-            disabled={isFixLoading}
+            disabled={isFixLoading || !results}
           >
             {isFixLoading ? (
               <span className="loading loading-dots loading-lg mt-1"></span>
