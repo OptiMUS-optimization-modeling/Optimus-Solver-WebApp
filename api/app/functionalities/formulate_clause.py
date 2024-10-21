@@ -48,7 +48,7 @@ class Variable(BaseModel):
     shape: list = Field(
         description="Shape of the variable (a potentially-empty list of string parameter symbols, e.g. ['N', 'M'])"
     )
-    type: str = Field(description="Type of the variable (BINARY, INTEGER, FLOAT)")
+    type: str = Field(description="Type of the variable (BINARY, INTEGER, CONTINUOUS)")
 
 
 class FormulatedClause(BaseModel):
