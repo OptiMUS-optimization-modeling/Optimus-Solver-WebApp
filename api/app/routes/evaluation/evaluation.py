@@ -281,17 +281,17 @@ def get_full_code():
     # iterate over variables and generate the code for the ones that don't have it
     for v in variables:
         variable = variables[v]
-        if "code" not in variable or not variable["code"]:
-            if not variable.get("shape") or len(variable["shape"]) == 0:
-                variable["code"] = (
-                    f"{variable['symbol']} = model.addVar(name='{variable['symbol']}', vtype=gp.GRB.{variable['type'].upper()})"
-                )
-            else:
-                # Unpack the shape list into separate arguments
-                shape_args = ", ".join(variable["shape"])
-                variable["code"] = (
-                    f"{variable['symbol']} = model.addVars({shape_args}, name='{variable['symbol']}', vtype=gp.GRB.{variable['type'].upper()})"
-                )
+
+        if not variable.get("shape") or len(variable["shape"]) == 0:
+            variable["code"] = (
+                f"{variable['symbol']} = model.addVar(name='{variable['symbol']}', vtype=gp.GRB.{variable['type'].upper()})"
+            )
+        else:
+            # Unpack the shape list into separate arguments
+            shape_args = ", ".join(variable["shape"])
+            variable["code"] = (
+                f"{variable['symbol']} = model.addVars({shape_args}, name='{variable['symbol']}', vtype=gp.GRB.{variable['type'].upper()})"
+            )
 
     # Update the project with the modified variables
     project.update({"variables": variables})
