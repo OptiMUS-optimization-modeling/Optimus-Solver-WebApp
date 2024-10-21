@@ -282,10 +282,14 @@ def get_full_code():
     for v in variables:
         variable = variables[v]
         if "code" not in variable or not variable["code"]:
-            variable["code"] = (
-                f"{variable['symbol']} = model.addVar(name='{variable['symbol']}', vtype=gp.GRB.{variable['type'].upper()})"
-            )
-
+            if variable["shape"]:
+                variable["code"] = (
+                    f"{variable['symbol']} = model.addVars(variable["shape"], name='{variable['symbol']}', vtype=gp.GRB.{variable['type'].upper()})"
+                )
+            else:
+                variable["code"] = (
+                    f"{variable['symbol']} = model.addVar(name='{variable['symbol']}', vtype=gp.GRB.{variable['type'].upper()})"
+                )                
     # Update the project with the modified variables
     project.update({"variables": variables})
 
