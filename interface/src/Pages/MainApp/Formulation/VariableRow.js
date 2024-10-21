@@ -157,7 +157,7 @@ const VariableRow = ({
         >
           <option value="BINARY">BINARY</option>
           <option value="INTEGER">INTEGER</option>
-          <option value="FLOAT">FLOAT</option>
+          <option value="CONTINUOUS">CONTINUOUS</option>
         </select>
       </td>
       <td className="actionColumn">
