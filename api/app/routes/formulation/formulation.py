@@ -5,14 +5,12 @@ import time
 
 from api.app.utils.misc import get_unique_id, handle_request_async
 from api.app.routes.auth.auth import login_required, check_project_ownership
-from api.app.functionalities.formulate_clause import formulate_clause
+from api.app.functionalities.formulation.formulate_clause import formulate_clause
 
 bp = Blueprint("formulation", __name__)
 
 
 def formulate_clause_wrapper(user_id, project_id, data):
-
-    print("-------DATA:   ", json.dumps(data, indent=4))
 
     clause_type = data["clauseType"]
     if clause_type == "objective":
@@ -42,12 +40,14 @@ def formulate_clause_wrapper(user_id, project_id, data):
     }
     new_data["variables"] = variables
 
+    db = current_app.clients["firestore_client"]
+    project = db.collection("projects").document(project_id)
+
+    new_data["solver"] = project.get().to_dict().get("solver", "none")
+
     res = formulate_clause(new_data)
 
     print("-------RESULTS:   ", json.dumps(res, indent=4))
-
-    db = current_app.clients["firestore_client"]
-    project = db.collection("projects").document(project_id)
 
     # Retrieve current variables and add new variables
     current_variables = project.get().to_dict().get("variables", {})

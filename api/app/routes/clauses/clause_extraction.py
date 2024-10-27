@@ -19,7 +19,7 @@ import time
 
 from api.app.utils.misc import get_unique_id, handle_request_async
 from api.app.routes.auth.auth import login_required, check_project_ownership
-from api.app.functionalities.extract_clauses import extract_clauses
+from api.app.functionalities.clauses.extract_clauses import extract_clauses
 
 bp = Blueprint("extract_clauses", __name__)
 

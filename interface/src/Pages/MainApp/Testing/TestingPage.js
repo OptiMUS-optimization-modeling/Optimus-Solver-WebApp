@@ -230,8 +230,12 @@ const TestingPage = ({
           <div className="code-box w-full bg-base-300 border rounded-box p-4 mt-2">
             <AceEditor
               mode="python"
-              theme={theme}
-              readOnly={false}
+              theme={
+                isRunLoading || isFixLoading || isSynthesizeLoading
+                  ? "tomorrow_night"
+                  : theme
+              }
+              readOnly={isRunLoading || isFixLoading || isSynthesizeLoading}
               name="test"
               editorProps={{ $blockScrolling: true }}
               value={code}

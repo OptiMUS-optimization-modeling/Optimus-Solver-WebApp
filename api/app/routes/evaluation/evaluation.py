@@ -79,9 +79,11 @@ from copy import deepcopy
 
 from api.app.utils.misc import get_unique_id, handle_request_async
 from api.app.routes.auth.auth import login_required, check_project_ownership
-from api.app.functionalities.fix_code import fix_code
+from api.app.functionalities.debugging.fix_code import fix_code
 
 bp = Blueprint("eval", __name__)
+
+solver_list = json.load(open("api/solver_list.json"))
 
 
 def prep_problem_json(state):
@@ -307,7 +309,6 @@ def get_full_code():
     # objective = request.json["objective"]
     # variables = request.json["variables"]
 
-    solver = "gurobipy"  # TODO: make this a parameter
     # data = request.json["data"]
     project_id = request.json["project_id"]
     db = current_app.clients["firestore_client"]
@@ -317,6 +318,7 @@ def get_full_code():
     constraints = project_data.get("constraints", {})
     objective = project_data.get("objective", {})
     variables = project_data.get("variables", {})
+    solver = project_data.get("solver", "none")
 
     # iterate over variables and generate the code for the ones that don't have it
     for v in variables:
@@ -368,7 +370,7 @@ def get_run_results():
     # constraints = request.json["constraints"]
     # objective = request.json["objective"]
     # variables = request.json["variables"]
-    solver = "gurobipy"  # TODO: make this a parameter
+
     data = request.json["data"]
     code = request.json["code"]
     project_id = request.json["project_id"]
@@ -376,6 +378,7 @@ def get_run_results():
     db = current_app.clients["firestore_client"]
     project = db.collection("projects").document(project_id)
     project.update({"code": code})
+    solver = project.get().to_dict().get("solver", "none")
 
     # code = project_data.get("code", "")
     # parameters = project_data.get("parameters", {})
@@ -436,8 +439,8 @@ def get_run_results():
 
 
 def get_solver_import_code(solver):
-    if solver == "gurobipy":
-        return "import gurobipy as gp"
+    if solver in solver_list:
+        return solver_list[solver]["import_code"]
     else:
         raise Exception(f"Solver {solver} is not supported yet!")
 
@@ -516,22 +519,24 @@ def update_code():
 
 
 def fix_code_wrapper(user_id, project_id, data):
-
-    new_data = deepcopy(data)  # Changed to deep copy
+    new_data = deepcopy(data)
 
     code = new_data["code"]
     error_message = new_data["error_message"]
 
-    res = fix_code(code, error_message)
+    db = current_app.clients["firestore_client"]
+    project = db.collection("projects").document(project_id)
+    solver = project.get().to_dict().get("solver", "none")
+
+    project.update({"code": new_data["code"]})
+
+    res = fix_code({"code": code, "error_message": error_message, "solver": solver})
 
     new_data["code"] = res["code"]
 
-    print("-------RESULTS:   ", json.dumps(res, indent=4))
-
-    db = current_app.clients["firestore_client"]
-    project = db.collection("projects").document(project_id)
-
     project.update({"code": new_data["code"]})
+
+    print("-------RESULTS:   ", json.dumps(res, indent=4))
 
     return {
         "status": "success",
@@ -546,7 +551,7 @@ def handle_fix_code():
     rj = request.json
     project_id = rj["project_id"]
     user_id = session["user_id"]
-    # param_data = rj["data"]
+
     code = rj["code"]
     error_message = rj["error_message"]
 

@@ -96,3 +96,22 @@ export const testAuth = async () => {
     throw error;
   }
 };
+
+export const setSolver = async (project_id, solver) => {
+  try {
+    const response = await fetch(`${BASE_URL}/projects/setSolver`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      credentials: "include",
+      body: JSON.stringify({ project_id, solver }),
+    });
+
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error("Error setting solver:", error);
+    throw error;
+  }
+};

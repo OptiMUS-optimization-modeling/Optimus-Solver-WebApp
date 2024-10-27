@@ -1,25 +1,8 @@
-prompt_template = """
-You're an expert programmer in a team of optimization experts. The goal of the team is to solve an optimization problem. Your task is to debug a piece of code.
-
-Here's the code:
-
------
-{code}
------
-
-Here's the error message:
-
------
-{error_message}
------
-
-
-Take a deep breath, and solve the problem step by step.
-"""
-
 import json
 from pydantic.v1 import BaseModel, Field
 from langchain_openai import ChatOpenAI
+
+import importlib
 
 llm = ChatOpenAI(model="gpt-4o")
 
@@ -34,7 +17,21 @@ class CodeFix(BaseModel):
 structured_llm = llm.with_structured_output(CodeFix)
 
 
-def fix_code(code, error_message):
+def fix_code(data):
+    code = data["code"]
+    error_message = data["error_message"]
+    solver = data["solver"]
+
+    # Dynamically import the prompt template based on the solver
+    try:
+        prompt_module = importlib.import_module(
+            f"api.app.functionalities.coding.prompts.{solver}"
+        )
+        prompt_template = prompt_module.prompt_template
+    except (ImportError, AttributeError) as e:
+        raise ImportError(
+            f"Could not import prompt template for solver '{solver}': {e}"
+        )
 
     prompt = prompt_template.format(
         code=code,

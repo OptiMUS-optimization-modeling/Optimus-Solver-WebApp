@@ -31,6 +31,7 @@ function MainApp({ isDark, setIsDark }) {
 
   const updateProject = useCallback(async () => {
     try {
+      await new Promise((resolve) => setTimeout(resolve, 300)); // Wait for 0.5 seconds
       const response = await fetch(
         process.env.REACT_APP_BACKEND_URL + "/projects/getProject",
         {

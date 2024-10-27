@@ -93,3 +93,17 @@ def delete_project():
     project_ref.delete()
 
     return jsonify({"message": "Project deleted successfully"}), 200
+
+
+@bp.route("/setSolver", methods=["POST"])
+@login_required
+@check_project_ownership
+def set_solver():
+    project_id = request.json.get("project_id")
+    solver = request.json.get("solver")
+
+    print("SET SOLVER: ", project_id, solver)
+    db = current_app.clients["firestore_client"]
+    project = db.collection("projects").document(project_id)
+    project.update({"solver": solver})
+    return jsonify({"message": "Solver set successfully"}), 200

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 
 import examples from "../../../Utils/Examples";
 import sendPollingRequest from "../../../Utils/Communication";
+import { setSolver } from "../../../Services/api";
 
 const AnalysisContainer = ({
   setCurrentStep,
@@ -20,6 +21,13 @@ const AnalysisContainer = ({
   useEffect(() => {
     setTmpDescription(project.problemDescription);
   }, [project.problemDescription]);
+
+  const handleSolverChange = (e) => {
+    const solver = e.target.value;
+
+    setSolver(project.id, solver); // Call setSolver with the selected solver
+    updateProject();
+  };
 
   const handleAnalyzeClick = () => {
     // resetState();
@@ -94,29 +102,39 @@ const AnalysisContainer = ({
         rows="15"
       ></textarea>
 
-      <div className="flex flex-row w-ninety justify-center mt-10">
-        <button
-          className="btn btn-secondary w-1/4 mx-10"
-          onClick={() => {
-            setTmpDescription(
-              examples[Math.floor(Math.random() * examples.length)]
-            );
-          }}
+      <div className="flex flex-row w-ninety justify-between mt-10">
+        <select
+          className="select select-bordered w-1/4"
+          value={project.solver}
+          onChange={handleSolverChange}
         >
-          Random
-        </button>
-        <div></div>
-        <button
-          className="btn btn-primary w-1/4 mx-10"
-          onClick={handleAnalyzeClick}
-          disabled={isLoading || isAnyLoading}
-        >
-          {isLoading ? (
-            <span className="loading loading-dots loading-lg mt-1"></span>
-          ) : (
-            "Analyze"
-          )}
-        </button>
+          <option value="gurobipy">gurobipy</option>
+          {/* <option value="cvxpy">cvxpy</option> */}
+        </select>
+
+        <div className="flex flex-row w-3/4 justify-end">
+          <button
+            className="btn btn-secondary w-1/4 mx-10"
+            onClick={() => {
+              setTmpDescription(
+                examples[Math.floor(Math.random() * examples.length)]
+              );
+            }}
+          >
+            Random
+          </button>
+          <button
+            className="btn btn-primary w-1/4 mx-10"
+            onClick={handleAnalyzeClick}
+            disabled={isLoading || isAnyLoading}
+          >
+            {isLoading ? (
+              <span className="loading loading-dots loading-lg mt-1"></span>
+            ) : (
+              "Analyze"
+            )}
+          </button>
+        </div>
       </div>
     </div>
   );

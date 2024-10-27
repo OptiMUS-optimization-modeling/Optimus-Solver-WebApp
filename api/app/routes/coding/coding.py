@@ -4,7 +4,7 @@ from copy import deepcopy
 
 from api.app.utils.misc import get_unique_id, handle_request_async
 from api.app.routes.auth.auth import login_required, check_project_ownership
-from api.app.functionalities.code_clause import code_clause
+from api.app.functionalities.coding.code_clause import code_clause
 
 bp = Blueprint("code_clauses", __name__)
 
@@ -40,12 +40,14 @@ def code_clause_wrapper(user_id, project_id, data):
     }
     new_data["relatedVariables"] = related_variables
 
+    db = current_app.clients["firestore_client"]
+    project = db.collection("projects").document(project_id)
+
+    new_data["solver"] = project.get().to_dict().get("solver", "none")
+
     res = code_clause(new_data)
 
     print("-------RESULTS:   ", json.dumps(res, indent=4))
-
-    db = current_app.clients["firestore_client"]
-    project = db.collection("projects").document(project_id)
 
     if clause_type == "objective":
         objective = project.get().to_dict().get("objective", [{}])[0]
