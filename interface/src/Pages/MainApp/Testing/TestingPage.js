@@ -55,6 +55,7 @@ const TestingPage = ({
   };
 
   const handleRunCodeClick = () => {
+    console.log("Running code with data:", data);
     if (Object.keys(data).length === 0) {
       setModalTitle("Error");
       setModalContent(
@@ -91,6 +92,7 @@ const TestingPage = ({
       },
       credentials: "include",
       body: JSON.stringify({
+        code: code,
         data: data,
         project_id: project.id,
       }),
@@ -152,8 +154,9 @@ const TestingPage = ({
     const callback = (data) => {
       console.log("Fix Success:", data);
       updateProject();
+      setCode(data.code);
       setIsFixLoading(false);
-      let explanation = data.bug_explanation;
+      let explanation = data.reasoning;
 
       setModalTitle("Code Fix");
       let msg = (
@@ -178,7 +181,10 @@ const TestingPage = ({
         "Content-Type": "application/json",
       },
       {
-        data: data,
+        // data: data,
+        code: code,
+        error_message: results,
+        project_id: project.id,
       },
       "/fixCode",
       "POST",

@@ -291,7 +291,7 @@ const FormulationPage = ({
                       <th>Symbol</th>
                       <th>Shape</th>
                       <th>Definition</th>
-                      <th>Action</th>
+                      <th>Domain</th>
                     </tr>
                   </thead>
                   <tbody>

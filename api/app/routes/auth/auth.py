@@ -50,6 +50,7 @@ def check_project_ownership(f):
     def decorated_function(*args, **kwargs):
         user_id = session.get("user_id")
         project_id = request.json.get("project_id")
+
         if not project_id:
             project_id = request.json.get("projectId")
 
@@ -58,13 +59,19 @@ def check_project_ownership(f):
         # Check if project_id belongs to user
         project_ref = db.collection("projects").document(project_id)
         project = project_ref.get()
+
+        print(f"Project ID: {project_id}")
         if not project.exists:
+            print("Project not found")
             return jsonify({"error": "Project not found"}), 404
 
         project_data = project.to_dict()
         if project_data["user_id"] != user_id:
+            owner = db.collection("users").document(project_data["user_id"]).get()
+            print(f"Owner: {owner.to_dict()}")
             return jsonify({"error": "Unauthorized access"}), 403
 
+        print("Project found and user has access")
         return f(*args, **kwargs)
 
     return decorated_function

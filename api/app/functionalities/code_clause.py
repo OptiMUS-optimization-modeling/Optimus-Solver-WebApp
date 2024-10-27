@@ -23,7 +23,7 @@ Assume the parameters and variables are already defined and added to the model, 
 
 Here is an example of code to add the objective to the model:
 
-m.setObjective(quicksum(profit[k] * x[k, i] - storeCost * s[k, i] for k in range(K) for i in range(I)), gp.GRB.MAXIMIZE)
+model.setObjective(quicksum(profit[k] * x[k, i] - storeCost * s[k, i] for k in range(K) for i in range(I)), gp.GRB.MAXIMIZE)
 
 Here is an example of code to add a constraint to the model:
 

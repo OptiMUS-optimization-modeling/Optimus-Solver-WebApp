@@ -128,7 +128,7 @@ function MainApp({ isDark, setIsDark }) {
             <div className="flex flex-row justify-between items-center mt-3">
               <div className="flex flex-row justify-center items-center mt-2 mx-2">
                 <a
-                  href="https://github.com/teshnizi/optimus"
+                  href="https://github.com/OptiMUS-optimization-modeling/Optimus-Solver-WebApp"
                   target="_blank"
                   rel="noopener noreferrer"
                 >

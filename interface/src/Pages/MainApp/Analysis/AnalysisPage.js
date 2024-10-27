@@ -103,7 +103,7 @@ const AnalysisContainer = ({
             );
           }}
         >
-          I'm feeling lucky!
+          Random
         </button>
         <div></div>
         <button

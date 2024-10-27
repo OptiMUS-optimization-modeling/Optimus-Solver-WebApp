@@ -73,6 +73,13 @@ import threading
 from api.app.utils.communication import get_llm_response, process_with_retries
 from api.app.routes.auth.auth import login_required, check_project_ownership
 
+from flask import Blueprint, request, jsonify, current_app, session
+import json
+from copy import deepcopy
+
+from api.app.utils.misc import get_unique_id, handle_request_async
+from api.app.routes.auth.auth import login_required, check_project_ownership
+from api.app.functionalities.fix_code import fix_code
 
 bp = Blueprint("eval", __name__)
 
@@ -99,19 +106,23 @@ def prep_problem_json(state):
     return state
 
 
-def run_code(state: Dict, interpret: bool = False):
+def piece_code_together(state: Dict, interpret: bool = False):
     local_env = {}
     code = ""
     last_line = ""
     bogus_context = None
 
     try:
+
+        print("STATE", state)
         last_line = prep_code.format(
             solver_import_code=get_solver_import_code(state["solver"]),
             data_json_path=state["data_json_path"],
         )
 
         code += last_line + "\n"
+
+        print("LAST LINE $$$", last_line)
 
         if interpret:
             exec(
@@ -258,6 +269,35 @@ def run_code(state: Dict, interpret: bool = False):
         }
 
 
+def run_code(code, data):
+    local_env = {}
+    print("CODE", code)
+    try:
+        res = exec(code, local_env, local_env)
+
+        return {
+            "success": True,
+            "obj_val": local_env["obj_val"] if "obj_val" in local_env else None,
+            "status": local_env["status"] if "status" in local_env else None,
+            "solving_info": (
+                local_env["solving_info"] if "solving_info" in local_env else None
+            ),
+            "error_message": None,
+            "error_traceback": None,
+        }
+    except Exception as e:
+        print(e)
+        import traceback
+
+        error_msg = traceback.format_exc()
+
+        return {
+            "success": False,
+            "error_message": str(e),
+            "error_traceback": error_msg,
+        }
+
+
 @bp.route("/getFullCode", methods=["POST"])
 @login_required
 @check_project_ownership
@@ -281,7 +321,6 @@ def get_full_code():
     # iterate over variables and generate the code for the ones that don't have it
     for v in variables:
         variable = variables[v]
-
         if not variable.get("shape") or len(variable["shape"]) == 0:
             variable["code"] = (
                 f"{variable['symbol']} = model.addVar(name='{variable['symbol']}', vtype=gp.GRB.{variable['type'].upper()})"
@@ -302,12 +341,12 @@ def get_full_code():
         "objective": objective,
         "variables": variables,
         "solver": solver,
-        "data_json_path": "tmpData/data.json",
+        "data_json_path": f"tmpData/{project_id}/data.json",
     }
 
     try:
         state = prep_problem_json(state)
-        code = run_code(
+        code = piece_code_together(
             state,
             interpret=False,
         )["code"]
@@ -331,55 +370,69 @@ def get_run_results():
     # variables = request.json["variables"]
     solver = "gurobipy"  # TODO: make this a parameter
     data = request.json["data"]
+    code = request.json["code"]
     project_id = request.json["project_id"]
+
     db = current_app.clients["firestore_client"]
     project = db.collection("projects").document(project_id)
-    project_data = project.get().to_dict()
-    parameters = project_data.get("parameters", {})
-    constraints = project_data.get("constraints", {})
-    objective = project_data.get("objective", {})
-    variables = project_data.get("variables", {})
+    project.update({"code": code})
+
+    # code = project_data.get("code", "")
+    # parameters = project_data.get("parameters", {})
+    # constraints = project_data.get("constraints", {})
+    # objective = project_data.get("objective", {})
+    # variables = project_data.get("variables", {})
 
     # if tmp folder doesn't exist, create it
     if not os.path.exists("tmpData/"):
         os.mkdir("tmpData/")
 
-    name = "".join(random.choices(string.ascii_uppercase + string.digits, k=10))
+    name = project_id
     path = f"tmpData/{name}"
-    os.mkdir(path)
+    print("PATH", path)
+    print("DATA", data)
+    if not os.path.exists(path):
+        os.mkdir(path)
     with open(f"{path}/data.json", "w") as f:
         json.dump(data, f)
 
+    with open(f"{path}/data.json", "r") as f:
+        tmp = f.read()
+        print("TMP", tmp)
+
     state = {
-        "parameters": parameters,
-        "constraints": constraints,
-        "objective": objective,
-        "variables": variables,
+        # "parameters": parameters,
+        # "constraints": constraints,
+        # "objective": objective,
+        # "variables": variables,
         "solver": solver,
         "data_json_path": f"{path}/data.json",
     }
 
-    print(json.dumps(state, indent=4))
-    try:
-        state = prep_problem_json(state)
-        run_result = run_code(
-            state,
-            interpret=True,
-        )
-        print("====$$")
-        print(json.dumps(state, indent=4))
-        print("====")
-        print(json.dumps(run_result, indent=4))
-        print("====")
+    # print(json.dumps(state, indent=4))
 
-    except Exception as e:
-        code = "ERROR!: " + str(e)
-        print(e)
+    # try:
+    # state = prep_problem_json(state)
+    # run_result = piece_code_together(
+    #     state,
+    #     interpret=True,
+    # )
+    # run_result = piece_code_together(state, interpret=True)
+
+    # except Exception as e:
+    #     code = "ERROR!: " + str(e)
+    #     print(e)
+
+    run_result = run_code(code, data)
+
+    print("====$$")
+    print(json.dumps(run_result, indent=4))
+    print("====")
 
     # delete the tmp folder
-    # os.system(f"rm -rf {path}")
+    os.system(f"rm -rf {path}")
 
-    return jsonify({"status": "success", "run_result": run_result, "state": state}), 200
+    return jsonify({"success": run_result["success"], "run_result": run_result}), 200
 
 
 def get_solver_import_code(solver):
@@ -388,8 +441,7 @@ def get_solver_import_code(solver):
     else:
         raise Exception(f"Solver {solver} is not supported yet!")
 
-
-def fix_code(parameters, variables, constraints, objective, solver, data):
+    # def fix_code(parameters, variables, constraints, objective, solver, data):
     bogus_context = None
     target_type = None
 
@@ -441,40 +493,7 @@ def fix_code(parameters, variables, constraints, objective, solver, data):
     }
 
 
-@bp.route("/fixCode", methods=["POST"])
-@login_required
-def get_fixed_code():
-    parameters = request.json["parameters"]
-    constraints = request.json["constraints"]
-    objective = request.json["objective"]
-    variables = request.json["variables"]
-    solver = "gurobipy"  # TODO: make this a parameter
-    data = request.json["data"]
-
-    # if tmp folder doesn't exist, create it
-    if not os.path.exists("tmpData/"):
-        os.mkdir("tmpData/")
-
-    request_id = request.json["request_id"]
-    athread = threading.Thread(
-        target=process_with_retries,
-        args=(
-            current_app.app_context(),
-            request_id,
-            3,
-            fix_code,
-            parameters,
-            variables,
-            constraints,
-            objective,
-            solver,
-            data,
-        ),
-    )
-
-    athread.start()
-
-    return jsonify({"received": True, "request_id": request_id}), 200
+# import datetime
 
 
 @bp.route("/updateCode", methods=["POST"])
@@ -494,3 +513,51 @@ def update_code():
         )
     except Exception as e:
         return jsonify({"status": "error", "message": str(e)}), 500
+
+
+def fix_code_wrapper(user_id, project_id, data):
+
+    new_data = deepcopy(data)  # Changed to deep copy
+
+    code = new_data["code"]
+    error_message = new_data["error_message"]
+
+    res = fix_code(code, error_message)
+
+    new_data["code"] = res["code"]
+
+    print("-------RESULTS:   ", json.dumps(res, indent=4))
+
+    db = current_app.clients["firestore_client"]
+    project = db.collection("projects").document(project_id)
+
+    project.update({"code": new_data["code"]})
+
+    return {
+        "status": "success",
+        "code": new_data["code"],
+        "reasoning": res["reasoning"],
+    }
+
+
+@bp.route("/fixCode", methods=["POST"])
+@login_required
+def handle_fix_code():
+    rj = request.json
+    project_id = rj["project_id"]
+    user_id = session["user_id"]
+    # param_data = rj["data"]
+    code = rj["code"]
+    error_message = rj["error_message"]
+
+    # print("HERHERHER", user_id, project_id, param_data, code)
+
+    # print(
+    #     f"Fixing code for project {project_id} with user {user_id},\ncode: {code}\nerror_message: {error_message}"
+    # )
+    return handle_request_async(
+        fix_code_wrapper,
+        user_id,
+        project_id,
+        {"code": code, "error_message": error_message},
+    )
