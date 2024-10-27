@@ -16,6 +16,18 @@ You can download the dataset from https://nlp4lp.vercel.app/. Please note that N
 
 To contribute to the web app, please open an issue or a pull request. All code functionalities are in the [`/api/app/functionalities`](api/app/functionalities) directory.
 
+## Adding New Solvers
+
+To add new a new solver, please follow these steps:
+
+1. Create a coding prompt file SOLVER_NAME.py in [Coding Prompts](https://github.com/OptiMUS-optimization-modeling/Optimus-Solver-WebApp/tree/main/api/app/functionalities/coding/prompts)
+2. Create a formulation prompt file SOLVER_NAME.py in [Formulation Prompts](https://github.com/OptiMUS-optimization-modeling/Optimus-Solver-WebApp/tree/main/api/app/functionalities/formulation/prompts)
+3. Create a debugging prompt file SOLVER_NAME.py in [Debugging Prompts](https://github.com/OptiMUS-optimization-modeling/Optimus-Solver-WebApp/tree/main/api/app/functionalities/debugging/prompts)
+ 
+4. Add the solver to the dropdown list in the front end [Analysis Page](https://github.com/OptiMUS-optimization-modeling/Optimus-Solver-WebApp/blob/main/interface/src/Pages/MainApp/Analysis/AnalysisPage.js). For example for cvxpy, you should add this line  `<option value="cvxpy">cvxpy</option>`
+
+Create a PR request to merge the code. You can look at the existing prompt files for gurobipy for reference. 
+
 # Privacy Policy
 
 The data uploaded to the web app is not used for any commercial purposes. The usage data can be used by in the future to 1) improve the web app and 2) do academic user studies on how people model and solve optimization problems.
