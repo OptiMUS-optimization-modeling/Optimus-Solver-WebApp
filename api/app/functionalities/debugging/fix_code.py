@@ -25,13 +25,15 @@ def fix_code(data):
     # Dynamically import the prompt template based on the solver
     try:
         prompt_module = importlib.import_module(
-            f"api.app.functionalities.coding.prompts.{solver}"
+            f"api.app.functionalities.debugging.prompts.{solver}"
         )
         prompt_template = prompt_module.prompt_template
     except (ImportError, AttributeError) as e:
         raise ImportError(
             f"Could not import prompt template for solver '{solver}': {e}"
         )
+
+    print("Prompt template: ", prompt_template)
 
     prompt = prompt_template.format(
         code=code,

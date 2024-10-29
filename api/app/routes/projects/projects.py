@@ -72,7 +72,7 @@ def create_project():
             "parameters": {},
             "background": "",
             "variables": {},
-            "solver": "",
+            "solver": "gurobipy",
         }
     )
     return jsonify({"project_id": project.id}), 200

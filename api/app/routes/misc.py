@@ -1,6 +1,7 @@
 from flask import Blueprint, current_app, request, jsonify
 from api.app.routes.auth.auth import login_required
-from redis import Redis
+
+# from redis import Redis
 import json
 
 bp = Blueprint("misc", __name__)
@@ -13,16 +14,26 @@ def poll_result():
     if not request_id:
         return jsonify({"error": "Missing request_id"}), 400
 
-    redis_client: Redis = current_app.redis
-    task_key = f"task:{request_id}"
-    task_data = redis_client.hgetall(task_key)
+    # redis_client: Redis = current_app.redis
+    # task_key = f"task:{request_id}"
+    # task_data = redis_client.hgetall(task_key)
 
-    print(f"Polling result for request ID: {request_id}, task data: {task_data}")
+    db = current_app.clients["firestore_client"]
+    doc = db.collection("tasks").document(request_id).get()
+    if not doc.exists:
+        return jsonify({"error": "No such task"}), 404
+    data = doc.to_dict()
 
-    if not task_data:
+    print(f"Polling result for request ID: {request_id}, task data: {data}")
+
+    if not data:
         return jsonify({"error": "No such task"}), 404
 
-    # Decode and deserialize the task data
+    if data["status"] == "done":
+        db.collection("tasks").document(request_id).delete()
+
+    return jsonify({"data": data}), 200
+
     try:
         task = {
             "status": task_data.get(b"status", b"").decode("utf-8"),

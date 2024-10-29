@@ -4,7 +4,7 @@ import firebase_admin
 from firebase_admin import credentials, auth
 
 import os
-from redis import Redis
+
 
 from .routes.analysis import analyze
 
@@ -43,9 +43,6 @@ def create_app():
 
     # Load config
     app.config.from_object("api.config.Config")
-
-    # Initialize Redis client for other purposes
-    app.redis = Redis.from_url(app.config["REDIS_URL"])
 
     # Load clients
     app.clients = get_clients(app.config)
