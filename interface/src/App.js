@@ -13,6 +13,8 @@ import Dashboard from "./Pages/Dashboard/Dashboard"; // Your dashboard component
 import { useState, useEffect } from "react";
 import Header from "./Utils/Header.js";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
+import TermsOfService from "./Pages/TermsOfService";
+import PrivacyPolicy from "./Pages/PrivacyPolicy";
 
 function App() {
   // ================================================
@@ -69,6 +71,8 @@ function App() {
             path="/project/:project_id"
             element={<MainApp isDark={isDark} setIsDark={setIsDark} />}
           />
+          <Route path="/terms-of-service" element={<TermsOfService />} />
+          <Route path="/privacy-policy" element={<PrivacyPolicy />} />
         </Routes>
       </AuthHandler>
     </Router>

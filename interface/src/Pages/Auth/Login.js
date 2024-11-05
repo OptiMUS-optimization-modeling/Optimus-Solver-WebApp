@@ -172,6 +172,17 @@ const LoginPage = ({ isDark, setIsDark }) => {
                 <p className="text-error text-sm w-1/4 text-center">{errMsg}</p>
               </div>
             </form>
+            <div className="flex justify-center items-center text-sm">
+              By using optimus, you agree to our&nbsp;
+              <Link to="/terms-of-service" className="link link-primary mx-1">
+                Terms of Service
+              </Link>
+              &nbsp;and&nbsp;
+              <Link to="/privacy-policy" className="link link-primary mx-1">
+                Privacy Policy
+              </Link>
+              .
+            </div>
           </div>
         </div>
         <div className="card text-primary-content w-1/2 card-bordered mt-10">
