@@ -10,7 +10,28 @@ The backend, built with Flask, is located in the [`api/`](api/) directory. The f
 
 ## Dataset
 
-You can download the dataset from https://nlp4lp.vercel.app/. Please note that NLP4LP is intended and licensed for research use only. The dataset is CC BY NC 4.0 (allowing only non-commercial use) and models trained using the dataset should not be used outside of research purposes (The updated version will be added soon).
+You can download the dataset from [https://huggingface.co/datasets/udell-lab/NLP4LP](https://huggingface.co/datasets/udell-lab/NLP4LP). Please note that NLP4LP is intended and licensed for research use only. The dataset is CC BY NC 4.0 (allowing only non-commercial use) and models trained using the dataset should not be used outside of research purposes (The updated version will be added soon).
+
+## Running the project locally 
+
+What you need:
+- A system with python and node/npm installed
+- A [firestore project](https://firebase.google.com/docs/firestore/quickstart) with a [service account](https://firebase.google.com/support/guides/service-accounts).
+
+Steps:
+1. Edit [the main .env](https://github.com/OptiMUS-optimization-modeling/Optimus-Solver-WebApp/blob/main/.env) file and add your `OPENAI_API_KEY` and `FIREBASE_CREDENTIALS` from your service account.
+2. Edit [the frontend .env](https://github.com/OptiMUS-optimization-modeling/Optimus-Solver-WebApp/blob/main/interface/.env) file and add your frontend firebase credentials.
+3. Create a new virtual environment, and run `pip install -r requirements.txt` to install the requirements.
+4. Start the flask backend using `flask run`.
+5. Install and start the react frontend:
+
+   ```
+   cd interface/
+   npm install
+   npm start
+   ```
+
+6. Open `http://localhost:3000/` in your browser.
 
 ## Contribution
 
