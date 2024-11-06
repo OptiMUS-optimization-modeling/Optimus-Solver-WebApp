@@ -9,7 +9,12 @@ const AuthHandler = ({ children }) => {
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       console.log("User:", user);
-      if (!user && !["/login", "/signup"].includes(window.location.pathname)) {
+      if (
+        !user &&
+        !["/login", "/signup", "/terms-of-service", "/privacy-policy"].includes(
+          window.location.pathname
+        )
+      ) {
         navigate("/login");
       } else if (
         user &&
