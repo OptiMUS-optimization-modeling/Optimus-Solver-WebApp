@@ -50,11 +50,10 @@ To contribute to the web app, please open an issue or a pull request. All code f
 
 To add new a new solver, please follow these steps:
 
-1. Create a coding prompt file SOLVER_NAME.py in [Coding Prompts](https://github.com/OptiMUS-optimization-modeling/Optimus-Solver-WebApp/tree/main/api/app/functionalities/coding/prompts)
-2. Create a formulation prompt file SOLVER_NAME.py in [Formulation Prompts](https://github.com/OptiMUS-optimization-modeling/Optimus-Solver-WebApp/tree/main/api/app/functionalities/formulation/prompts)
-3. Create a debugging prompt file SOLVER_NAME.py in [Debugging Prompts](https://github.com/OptiMUS-optimization-modeling/Optimus-Solver-WebApp/tree/main/api/app/functionalities/debugging/prompts)
- 
-4. Add the solver to the dropdown list in the front end [Analysis Page](https://github.com/OptiMUS-optimization-modeling/Optimus-Solver-WebApp/blob/main/interface/src/Pages/MainApp/Analysis/AnalysisPage.js). For example for cvxpy, you should add this line  `<option value="cvxpy">cvxpy</option>`
+1. Create a **coding prompt** file SOLVER_NAME.py in [Coding Prompts](https://github.com/OptiMUS-optimization-modeling/Optimus-Solver-WebApp/tree/main/api/app/functionalities/coding/prompts) (Make sure you also include the **variable code generation function**)
+2. Create a **formulation prompt** file SOLVER_NAME.py in [Formulation Prompts](https://github.com/OptiMUS-optimization-modeling/Optimus-Solver-WebApp/tree/main/api/app/functionalities/formulation/prompts)
+3. Create a **debugging prompt** file SOLVER_NAME.py in [Debugging Prompts](https://github.com/OptiMUS-optimization-modeling/Optimus-Solver-WebApp/tree/main/api/app/functionalities/debugging/prompts)
+5. Add the solver to the dropdown list in the front end [Analysis Page](https://github.com/OptiMUS-optimization-modeling/Optimus-Solver-WebApp/blob/main/interface/src/Pages/MainApp/Analysis/AnalysisPage.js). For example for cvxpy, you should add this line  `<option value="cvxpy">cvxpy</option>`
 
 Create a PR request to merge the code. You can look at the existing prompt files for gurobipy for reference. 
 
