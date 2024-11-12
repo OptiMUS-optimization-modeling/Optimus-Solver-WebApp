@@ -5,3 +5,5 @@ interface/.env
 .env
 interface/build
 tmpData/
+admin_creds.json
+.DS_Store

@@ -16,7 +16,6 @@ def get_clients(config):
     )
     firebase_creds = json.loads(firebase_creds_json)
 
-    print(json.dumps(firebase_creds, indent=2))
     cred = credentials.Certificate(firebase_creds)
 
     firebase_admin.initialize_app(cred)
