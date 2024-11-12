@@ -28,6 +28,9 @@ class FormulatedClause(BaseModel):
     variables_used: list[str] = Field(
         description="The list of variables (including the newly-defined ones) that are used in the clause"
     )
+    formulationConfidence: int = Field(
+        description="From 1 to 5, how confident are you that the formulation is correct?"
+    )
 
 
 structured_llm = llm.with_structured_output(FormulatedClause)
@@ -95,5 +98,6 @@ def formulate_clause(data):
         },
         "parameters_used": res.parameters_used,
         "variables_used": res.variables_used,
+        "formulationConfidence": res.formulationConfidence,
     }
     return output

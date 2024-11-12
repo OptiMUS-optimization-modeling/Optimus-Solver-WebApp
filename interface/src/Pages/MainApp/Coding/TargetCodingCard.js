@@ -7,6 +7,7 @@ import "katex/dist/katex.min.css";
 import "ace-builds/src-noconflict/mode-python";
 import "ace-builds/src-noconflict/theme-tomorrow";
 import "ace-builds/src-noconflict/theme-tomorrow_night";
+import { getScoreColor } from "../../../Services/api";
 
 const TargetCodingCard = ({
   isDark,
@@ -59,8 +60,11 @@ const TargetCodingCard = ({
           </button>
         </div>
 
-        <div className="flex flex-col w-1/2 h-100">
-          <div className="w-full bg-base-300 border rounded-box p-4 mt-2 h-full">
+        <div className="flex flex-col w-1/2">
+          <div
+            className="w-full bg-base-300 border rounded-box p-3 mt-2 h-full"
+            style={{ height: "150px" }}
+          >
             <AceEditor
               mode="python"
               theme={theme}
@@ -73,9 +77,22 @@ const TargetCodingCard = ({
               name={targetKey}
               editorProps={{ $blockScrolling: true }}
               value={tmpCode}
-              style={{ height: "100%", width: "100%" }} // set the height to 100% to make it responsive
+              style={{ height: "80%", width: "100%" }}
               wrapEnabled={true}
             />
+            <div className="mt-2 flex items-center justify-between">
+              <span className="text-xs mr-2">
+                Confidence:{" "}
+                <span className="font-bold">{target.codingConfidence}/5</span>
+              </span>
+              <progress
+                className={`progress w-1/2 progress-${getScoreColor(
+                  target.codingConfidence
+                )}`}
+                value={target.codingConfidence}
+                max="5"
+              ></progress>
+            </div>
           </div>
         </div>
       </div>

@@ -115,3 +115,9 @@ export const setSolver = async (project_id, solver) => {
     throw error;
   }
 };
+
+export const getScoreColor = (score) => {
+  if (score <= 2) return "error";
+  if (score <= 4) return "warning";
+  return "success";
+};

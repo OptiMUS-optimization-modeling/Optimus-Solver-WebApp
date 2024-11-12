@@ -236,6 +236,7 @@ const FormulationPage = ({
                 <h1 className="text-xl mb-2">Objective</h1>
               </div>
             </div>
+
             {project.objective.map((objective) => (
               <TargetFormulationCard
                 key={objective.id} // Use objective.id as the key

@@ -7,6 +7,7 @@ from api.app.routes.auth.auth import login_required, check_project_ownership
 from api.app.functionalities.coding.code_clause import code_clause
 
 bp = Blueprint("code_clauses", __name__)
+import random
 
 
 def code_clause_wrapper(user_id, project_id, data):
@@ -60,6 +61,8 @@ def code_clause_wrapper(user_id, project_id, data):
                         "parametersUsed": objective["parametersUsed"],
                         "variablesUsed": objective["variablesUsed"],
                         "code": res["code"],
+                        "formulationConfidence": objective["formulationConfidence"],
+                        "codingConfidence": res["codingConfidence"],
                     }
                 ]
             }
@@ -76,6 +79,8 @@ def code_clause_wrapper(user_id, project_id, data):
                         "parametersUsed": constraint["parametersUsed"],
                         "variablesUsed": constraint["variablesUsed"],
                         "code": res["code"],
+                        "formulationConfidence": constraint["formulationConfidence"],
+                        "codingConfidence": res["codingConfidence"],
                     }
                 )
         project.update({"constraints": constraints})

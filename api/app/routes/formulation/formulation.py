@@ -6,6 +6,7 @@ import time
 from api.app.utils.misc import get_unique_id, handle_request_async
 from api.app.routes.auth.auth import login_required, check_project_ownership
 from api.app.functionalities.formulation.formulate_clause import formulate_clause
+import random
 
 bp = Blueprint("formulation", __name__)
 
@@ -78,6 +79,7 @@ def formulate_clause_wrapper(user_id, project_id, data):
                         "formulation": res["formulation"],
                         "parametersUsed": res["parameters_used"],
                         "variablesUsed": res["variables_used"],
+                        "formulationConfidence": res["formulationConfidence"],
                     }
                 ]
             }
@@ -93,6 +95,7 @@ def formulate_clause_wrapper(user_id, project_id, data):
                         "formulation": res["formulation"],
                         "parametersUsed": res["parameters_used"],
                         "variablesUsed": res["variables_used"],
+                        "formulationConfidence": res["formulationConfidence"],
                     }
                 )
         project.update({"constraints": constraints})

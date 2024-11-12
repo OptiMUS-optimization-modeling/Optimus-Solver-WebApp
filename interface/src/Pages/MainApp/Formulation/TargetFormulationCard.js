@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { BlockMath } from "react-katex";
 import "katex/dist/katex.min.css";
+import { getScoreColor } from "../../../Services/api";
 
 const TargetFormulationCard = ({
   targetKey,
@@ -60,10 +61,22 @@ const TargetFormulationCard = ({
           onBlur={() => {
             updateTarget(targetKey, "formulation", tmpFormulation);
           }}
-          // onChange={handleFormulationChange}
           className="textarea textarea-bordered mt-2 w-full"
-          rows="1"
+          rows="3"
         ></textarea>
+        <div className="mt-2 flex items-center justify-between">
+          <span className="text-xs mr-2">
+            Confidence:{" "}
+            <span className="font-bold">{target.formulationConfidence}/5</span>
+          </span>
+          <progress
+            className={`progress w-1/2 progress-${getScoreColor(
+              target.formulationConfidence
+            )}`}
+            value={target.formulationConfidence}
+            max="5"
+          ></progress>
+        </div>
       </div>
       {/* wrap if overflow on x */}
       <div className="flex flex-col w-1/2 items-start justify-center max-w-1/2 border rounded-box p-4 mt-2 ml-4 overflow-x-auto">

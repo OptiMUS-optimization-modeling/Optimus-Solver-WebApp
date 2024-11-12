@@ -8,6 +8,9 @@ llm = ChatOpenAI(model="gpt-4o")
 
 class CodeClause(BaseModel):
     code: str = Field(description="The code specific to the clause to add to the model")
+    confidence: int = Field(
+        description="From 1 to 5, how confident are you that the code is correct?"
+    )
 
 
 structured_llm = llm.with_structured_output(CodeClause)
@@ -71,6 +74,7 @@ def code_clause(data):
 
     output = {
         "code": res.code,
+        "codingConfidence": res.confidence,
     }
 
     print("Returining ", output)
