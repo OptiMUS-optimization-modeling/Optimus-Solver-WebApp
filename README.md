@@ -28,7 +28,7 @@ Steps:
 
 You’ll need this JSON file to authenticate your Firebase Admin SDK requests.
 1. Edit [the main .env](https://github.com/OptiMUS-optimization-modeling/Optimus-Solver-WebApp/blob/main/.env) file and add your `OPENAI_API_KEY` and `FIREBASE_CREDENTIALS` from your service account. `FIREBASE_CREDENTIALS` should be the base64 encoding of your firebase json credentials (explained in step 0). 
-2. Edit [the frontend .env](https://github.com/OptiMUS-optimization-modeling/Optimus-Solver-WebApp/blob/main/interface/.env) file and add your frontend firebase credentials.
+2. Edit [the frontend .env](https://github.com/OptiMUS-optimization-modeling/Optimus-Solver-WebApp/blob/main/interface/.env) file and add your frontend firebase credentials (You can get one via firebase dashboard > settings > general > add app > web app).
 3. Open new terminals (so .env files take effect), create a new virtual environment, and run `pip install -r requirements.txt` to install the requirements.
 4. Start the flask backend using `flask run`.
 5. Install and start the react frontend:
