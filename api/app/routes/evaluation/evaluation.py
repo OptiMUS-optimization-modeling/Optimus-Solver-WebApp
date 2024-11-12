@@ -300,6 +300,18 @@ def run_code(code, data):
         }
 
 
+import importlib
+
+
+def generate_variable_code(symbol, type, shape, solver):
+    prompt_module = importlib.import_module(
+        f"api.app.functionalities.coding.prompts.{solver}"
+    )
+    generate_variable_code_function = prompt_module.generate_variable_code
+
+    return generate_variable_code_function(symbol, type, shape)
+
+
 @bp.route("/getFullCode", methods=["POST"])
 @login_required
 @check_project_ownership
@@ -324,15 +336,10 @@ def get_full_code():
     for v in variables:
         variable = variables[v]
         if not variable.get("shape") or len(variable["shape"]) == 0:
-            variable["code"] = (
-                f"{variable['symbol']} = model.addVar(name='{variable['symbol']}', vtype=gp.GRB.{variable['type'].upper()})"
-            )
-        else:
-            # Unpack the shape list into separate arguments
-            shape_args = ", ".join(variable["shape"])
-            variable["code"] = (
-                f"{variable['symbol']} = model.addVars({shape_args}, name='{variable['symbol']}', vtype=gp.GRB.{variable['type'].upper()})"
-            )
+            variable["shape"] = []
+        variable["code"] = generate_variable_code(
+            variable["symbol"], variable["type"], variable["shape"], solver
+        )
 
     # Update the project with the modified variables
     project.update({"variables": variables})

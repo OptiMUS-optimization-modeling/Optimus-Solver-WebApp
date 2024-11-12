@@ -43,3 +43,11 @@ y = model.addVar(name="y", vtype=GRB.BINARY)
 
 Take a deep breath, and solve the problem step by step.
 """
+
+
+def generate_variable_code(symbol, type, shape):
+    if not shape or len(shape) == 0:
+        return f"{symbol} = model.addVar(name='{symbol}', vtype=gp.GRB.{type.upper()})"
+    else:
+        shape_args = ", ".join(shape)
+        return f"{symbol} = model.addVars({shape_args}, name='{symbol}', vtype=gp.GRB.{type.upper()})"

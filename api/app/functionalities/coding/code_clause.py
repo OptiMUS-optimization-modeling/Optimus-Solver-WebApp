@@ -34,6 +34,7 @@ def code_clause(data):
             f"api.app.functionalities.coding.prompts.{solver}"
         )
         prompt_template = prompt_module.prompt_template
+
     except (ImportError, AttributeError) as e:
         raise ImportError(
             f"Could not import prompt template for solver '{solver}': {e}"
