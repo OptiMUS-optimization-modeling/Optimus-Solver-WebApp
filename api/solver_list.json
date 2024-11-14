@@ -1,5 +1,8 @@
 {
   "gurobipy": {
     "import_code": "import gurobipy as gp"
+  },
+  "cvxpy": {
+    "import_code": "import cvxpy as cp"
   }
 }
