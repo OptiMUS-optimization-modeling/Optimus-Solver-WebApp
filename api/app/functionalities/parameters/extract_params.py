@@ -61,6 +61,7 @@ def extract_params(data):
             p.symbol: {
                 "definition": p.definition,
                 "shape": p.shape,
+                "value": p.value,
             }
             for p in res.parameters
         },
