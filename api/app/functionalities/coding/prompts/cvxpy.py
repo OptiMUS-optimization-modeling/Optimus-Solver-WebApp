@@ -39,8 +39,17 @@ Take a deep breath, and solve the problem step by step.
 
 
 def generate_variable_code(symbol, type, shape):
-    if not shape or len(shape) == 0:
-        return f"{symbol} = cp.Variable(name='{symbol}', {type})"
+    type = type.upper()
+    params = []
+    if type == 'INTEGER':
+        params.append('integer=True')
+    elif type == 'BINARY':
+        params.append('boolean=True')
+    if shape:
+        if len(shape) == 1:
+            shape_str = shape[0]
+        else:
+            shape_str = f"({', '.join(shape)})"
+        return f"{symbol} = cp.Variable({shape_str}, name='{symbol}'{', ' + ', '.join(params) if params else ''})"
     else:
-        shape_args = ", ".join(shape)
-        return f"{symbol} = cp.Variable({shape_args}, name='{symbol}', {type})"
+        return f"{symbol} = cp.Variable(name='{symbol}'{', ' + ', '.join(params) if params else ''})"
