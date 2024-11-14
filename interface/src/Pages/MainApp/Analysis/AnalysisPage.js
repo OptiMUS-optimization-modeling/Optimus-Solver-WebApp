@@ -109,7 +109,7 @@ const AnalysisContainer = ({
           onChange={handleSolverChange}
         >
           <option value="gurobipy">gurobipy</option>
-          {/* <option value="cvxpy">cvxpy</option> */}
+          <option value="cvxpy">cvxpy</option>
         </select>
 
         <div className="flex flex-row w-3/4 justify-end">
