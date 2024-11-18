@@ -6,19 +6,9 @@ from api.app.functionalities.parameters.extract_params import extract_params
 from api.app.functionalities.clauses.extract_clauses import extract_clauses
 from api.app.functionalities.formulation.formulate_clause import formulate_clause
 from api.app.functionalities.coding.code_clause import code_clause
-from api.app.functionalities.coding.fix_code import fix_code
+from api.app.functionalities.debugging.fix_code import fix_code
 from auto_testing_helper_functions.auto_testing_helper_functions_cvxpy import synthesize_code_cvxpy, execute_code
 
-
-SOLVER = "cvxpy"
-TESTPATH = "/Users/yinjunwang/Desktop/Research/nl4opt-sample-data"
-
-state = {"solver": SOLVER, "variables": {}}
-for i in range(1, 2):
-   dir = os.path.join(TESTPATH, f"{i}")
-   if not os.path.exists(dir):
-      continue
-   testing_for_one(state, dir)
 
 ### Helper functions
 def testing_for_one(state, dir):
@@ -27,7 +17,7 @@ def testing_for_one(state, dir):
       os.makedirs(test_dir)
 
    ## State 1: Get formated description
-   with open(os.path.join(test_dir, 'description.txt'), 'r') as f:
+   with open(os.path.join(dir, 'description.txt'), 'r') as f:
       desc = f.read()
    state["problemDescription"] = desc
    state.update(extract_params(state))
@@ -105,6 +95,14 @@ def testing_for_one(state, dir):
    ## State 6: Run the code
    execute_code(test_dir)
 
-# Initialize the state
+
+### Main
+SOLVER = "cvxpy"
+TESTPATH = "/Users/yinjunwang/Desktop/Research/nl4opt-sample-data"
+
 state = {"solver": SOLVER, "variables": {}}
-process_state(state, dir)
+for i in range(1, 2):
+   dir = os.path.join(TESTPATH, f"{i}")
+   if not os.path.exists(dir):
+      continue
+   testing_for_one(state, dir)
