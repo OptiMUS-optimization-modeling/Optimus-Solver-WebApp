@@ -52,7 +52,11 @@ const ParametersPage = ({
     if (
       currentProblemType &&
       (!lastShownProblemType ||
-        currentProblemType.explanation !== lastShownProblemType.explanation)
+        currentProblemType.explanation !== lastShownProblemType.explanation) &&
+      currentProblemType.explanation &&
+      currentProblemType.explanation !== "" &&
+      currentProblemType.type &&
+      currentProblemType.type !== ""
     ) {
       setModalContent(
         <div className="flex flex-col items-start px-10 ">

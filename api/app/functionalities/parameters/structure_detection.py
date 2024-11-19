@@ -91,7 +91,7 @@ llm = ChatOpenAI(model="gpt-4o")
 
 class StructureResponse(BaseModel):
     problem_type: str = Field(
-        description="The type of the structured problem that the description matches. NA if the problem does not match any of the given problem types."
+        description='The type of the structured problem that the description matches. use "NA" if the problem does not match any of the given problem types.'
     )
     explanation: str = Field(
         description="A brief markdown string of 1-5 sentences (no latex format mathematical notation) explaining how the given description matches the problem type, NA if the problem does not match any of the given problem types. You can use bold/italic/etc. highlighting and indentation for better readability."
@@ -106,6 +106,6 @@ def detect_structure(description):
     prompt = prompt_template.format(description=description)
     res = structured_llm.invoke(prompt)
 
-    if res.problem_type == "NA":
+    if res.problem_type.lower() in ["na", "nothing", "", "none"]:
         return None, None
     return res.problem_type, res.explanation
