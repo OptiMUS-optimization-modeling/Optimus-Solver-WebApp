@@ -28,6 +28,7 @@ def extract_params_wrapper(user_id, project_id, data):
                 for p in res["parameters"]
             },
             "formattedDescription": res["formattedDescription"],
+            "structuredProblemType": res["structuredProblemType"],
         }
     )
 

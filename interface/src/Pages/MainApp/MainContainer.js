@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import AnalysisContainer from "./Analysis/AnalysisPage";
 import ParametersPage from "./Parameters/ParametersPage";
 import TargetExtractionPage from "./Targets/Targets";
@@ -40,6 +40,8 @@ const MainContainer = ({
   const [isAnyLoading, setIsAnyLoading] = React.useState(false);
   const [modalTitle, setModalTitle] = React.useState("");
   const [modalContent, setModalContent] = React.useState("");
+  // New state to track the last shown structuredProblemType
+  const [lastShownProblemType, setLastShownProblemType] = useState(null);
 
   const updateVariable = (key, field, value) => {
     // send a request to update the variable
@@ -218,6 +220,8 @@ const MainContainer = ({
               project={project}
               updateProject={updateProject}
               shapeValid={shapeValid}
+              lastShownProblemType={lastShownProblemType}
+              setLastShownProblemType={setLastShownProblemType}
             />
           </div>
         )}

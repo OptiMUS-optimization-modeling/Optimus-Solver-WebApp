@@ -1,25 +1,74 @@
-
-
 body {
   margin: 0;
   /* font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
     'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
     sans-serif; */
-  font-family: 'Poppins', sans-serif;
+  font-family: "Poppins", sans-serif;
   /* font-family: 'Roboto', sans-serif; */
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   overflow-x: hidden;
 }
 
-html, body, #root {
-  
+html,
+body,
+#root {
   height: 100%;
   margin: 0;
   padding: 0;
 }
 
 code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
     monospace;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+ul,
+ol {
+  list-style: initial; /* Ensure default list styles are applied */
+  margin-left: 40px; /* Add more margin for better indentation */
+  padding-left: 20px; /* Add padding for additional indentation */
+  margin-bottom: 0.25rem; /* Add some space between list items */
+  margin-top: 0.25rem;
+}
+
+li {
+  margin-bottom: 0.5rem; /* Add some space between list items */
+  margin-top: 0.5rem;
+}
+
+.markdown-content p {
+  margin-bottom: 0.5rem; /* Add space after paragraphs */
+}
+
+@media (max-width: 600px) {
+  ul,
+  ol {
+    margin-left: 20px;
+    padding-left: 10px;
+  }
+}
+
+/* Add styles for tables in markdown content */
+.markdown-content table {
+  width: 100%;
+  border-collapse: collapse; /* Ensures borders are shared between cells */
+  margin-bottom: 1rem; /* Add some space below the table */
+}
+
+.markdown-content th,
+.markdown-content td {
+  border: 1px solid #ddd; /* Add border to table cells */
+  padding: 8px; /* Add padding for better readability */
+  text-align: left; /* Align text to the left */
+}
+
+.markdown-content th {
+  font-weight: bold; /* Make header text bold */
 }

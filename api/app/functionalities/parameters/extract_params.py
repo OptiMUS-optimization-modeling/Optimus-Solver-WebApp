@@ -1,5 +1,5 @@
 prompt_template = """
-You are an expert mathematical modeler and an optimization professor at a top university. Your task is to read a given optimization problem. Your goal is to identify the parameters in the problem description (parameters are known values upon which the model is built, and they do not change during the optimization process).
+You are an expert mathematical modeler and an optimization professor at a top university. Your goal is to read the description for an optimization problem and identify the parameters in the problem description (parameters are known values upon which the model is built, and they do not change during the optimization process).
 
 Here is the problem description:
 -----
@@ -24,6 +24,8 @@ from pydantic.v1 import BaseModel, Field
 from langchain_openai import ChatOpenAI
 
 llm = ChatOpenAI(model="gpt-4o")
+
+from api.app.functionalities.parameters.structure_detection import detect_structure
 
 
 class Parameter(BaseModel):
@@ -53,6 +55,7 @@ structured_llm = llm.with_structured_output(FormattedProblem)
 def extract_params(data):
 
     description = data["problemDescription"]
+    problem_type, explanation = detect_structure(description)
     prompt = prompt_template.format(description=description)
     res = structured_llm.invoke(prompt)
 
@@ -67,6 +70,11 @@ def extract_params(data):
         },
         "formattedDescription": res.formattedDescription,
         "background": res.background,
+    }
+
+    output["structuredProblemType"] = {
+        "type": problem_type,
+        "explanation": explanation,
     }
 
     return output
