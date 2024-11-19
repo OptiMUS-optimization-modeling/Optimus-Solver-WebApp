@@ -80,6 +80,8 @@ If the problem description matches one of the types above, please output the nam
 Here is the problem description 
 
 {description}
+
+Note that the problem description does not have to match any of the problem types. If it does not match any of the problem types, please just use NA. Only propose a problem type if you are confident that the problem description matches the problem type.
 """
 
 
