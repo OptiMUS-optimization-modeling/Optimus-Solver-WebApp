@@ -78,5 +78,5 @@ def code_clause(data):
         "codingConfidence": res.confidence,
     }
 
-    print("Returining ", output)
+    print("Returning ", output)
     return output

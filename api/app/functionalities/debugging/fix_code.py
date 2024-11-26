@@ -47,5 +47,5 @@ def fix_code(data):
         "reasoning": res.reasoning,
     }
 
-    print("Returining ", output)
+    print("Returning ", output)
     return output
