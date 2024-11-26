@@ -1,34 +1,25 @@
 import React, { useState, useEffect } from "react";
 import ParameterRow from "./ParameterRow";
 import "./Parameters.css";
-
+import { marked } from "marked";
 const ParametersPage = ({
   isAnyLoading,
   setIsAnyLoading,
   setCurrentStep,
-  // formattedDescription,
-  // setFormattedDescription,
-  // parameters,
-  // setParameters,
-  // setConstraints,
   data,
   setData,
-  // modalTitle,
-  setModalTitle,
-  // modalContent,
-  setModalContent,
   project,
   updateProject,
   shapeValid,
+  setModalTitle,
+  setModalContent,
+  lastShownProblemType,
+  setLastShownProblemType,
 }) => {
   const [tmpDescription, setTmpDescription] = useState(
     project.formattedDescription
   );
-  // const [isLoading, setIsLoading] = useState(false);
   const [allPass, setAllPass] = useState(false);
-  // const [modalTitle, setModalTitle] = useState("Error");
-  // const [modalValue, setModalContent] = useState("");
-
   const [addButtonContent, setAddButtonContent] = useState(
     <i className="fa fa-plus"></i>
   );
@@ -51,7 +42,63 @@ const ParametersPage = ({
       }
     });
     setAllPass(all_pass);
-  }, [project.parameters]);
+  }, [project.parameters, shapeValid]);
+
+  // Modified useEffect to show modal only once per unique structuredProblemType
+  useEffect(() => {
+    const currentProblemType = project.structuredProblemType;
+
+    // Check if the current problem type is different from the last shown
+    if (
+      currentProblemType &&
+      (!lastShownProblemType ||
+        currentProblemType.explanation !== lastShownProblemType.explanation) &&
+      currentProblemType.explanation &&
+      currentProblemType.explanation !== "" &&
+      currentProblemType.type &&
+      currentProblemType.type !== ""
+    ) {
+      setModalContent(
+        <div className="flex flex-col items-start px-10 ">
+          <h1>
+            It seems like your problem is an instance of{" "}
+            <strong className="text-primary">{currentProblemType.type}.</strong>{" "}
+            Consider using one of the relevant specific-purpose solvers instead
+            of OptiMUS.
+          </h1>
+          <br />
+
+          <div
+            className="markdown-content"
+            style={{
+              color: "black",
+              py: 0,
+              px: 2,
+              my: 1,
+              borderRadius: "12px",
+              maxWidth: "100%",
+              "& a": {
+                color: "lightblue", // Set link color to light blue
+              },
+            }}
+            dangerouslySetInnerHTML={{
+              __html: marked(project.structuredProblemType.explanation),
+            }}
+          />
+        </div>
+      );
+      setModalTitle("Common Problem Type Detected");
+      document.getElementById("my_modal_2").showModal();
+
+      // Update the last shown problem type
+      setLastShownProblemType(currentProblemType);
+    }
+  }, [
+    project.structuredProblemType,
+    setModalContent,
+    setModalTitle,
+    lastShownProblemType, // Add this dependency
+  ]);
 
   const deleteParameter = (key) => {
     // send a request to delete the parameter
@@ -123,7 +170,6 @@ const ParametersPage = ({
           placeholder="Formatted description"
           value={tmpDescription}
           onChange={(e) => setTmpDescription(e.target.value)}
-          // disabled={isLoading}
           disabled={true}
           className="textarea textarea-bordered w-full mt-2"
           rows="7"
@@ -163,8 +209,6 @@ const ParametersPage = ({
                   paramKey={key}
                   data={param}
                   project_id={project.id}
-                  // updateParameter={updateParameter}
-                  // callUploadGuide={callUploadGuide}
                   shapeValid={shapeValid}
                   deleteParameter={deleteParameter}
                   updateProject={updateProject}
@@ -202,19 +246,6 @@ const ParametersPage = ({
           </button>
         </div>
       </div>
-
-      {/* <dialog id="my_modal_2" class="modal">
-                <div class="modal-box">
-                    <h3 class="font-bold text-lg text-secondary">
-                        {modalTitle}
-                    </h3>
-                    <div className="divider my-0"></div>
-                    <p class="py-4">{modalValue}</p>
-                </div>
-                <form method="dialog" class="modal-backdrop">
-                    <button>close</button>
-                </form>
-            </dialog> */}
     </div>
   );
 };
