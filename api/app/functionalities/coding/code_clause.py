@@ -1,9 +1,8 @@
 import json
 from pydantic.v1 import BaseModel, Field
-from langchain_openai import ChatOpenAI
 import importlib
 
-llm = ChatOpenAI(model="gpt-4o")
+from api.app.functionalities.utils import llm
 
 
 class CodeClause(BaseModel):

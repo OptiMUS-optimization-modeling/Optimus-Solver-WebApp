@@ -17,11 +17,8 @@ Take a deep breath, and solve the problem step by step.
 """
 
 from pydantic.v1 import BaseModel, Field
-from langchain_openai import ChatOpenAI
+from api.app.functionalities.utils import llm
 from api.app.utils.misc import get_unique_id
-
-
-llm = ChatOpenAI(model="gpt-4o")
 
 
 class ExtractedClauses(BaseModel):

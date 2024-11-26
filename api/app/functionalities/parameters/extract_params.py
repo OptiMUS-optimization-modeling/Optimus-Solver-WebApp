@@ -21,10 +21,7 @@ Take a deep breath and tackle the problem step by step.
 
 
 from pydantic.v1 import BaseModel, Field
-from langchain_openai import ChatOpenAI
-
-llm = ChatOpenAI(model="gpt-4o")
-
+from api.app.functionalities.utils import llm
 from api.app.functionalities.parameters.structure_detection import detect_structure
 
 

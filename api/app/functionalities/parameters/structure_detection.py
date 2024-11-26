@@ -84,11 +84,10 @@ Here is the problem description
 Note that the problem description does not have to match any of the problem types. If it does not match any of the problem types, please just use NA. Only propose a problem type if you are confident that the problem description matches the problem type.
 """
 
+(gp.quicksum(LaborRequired[p] * ProductQuantity[p] for p in range(P)) <= TotalLabor, name="labor_constraint")
 
 from pydantic.v1 import BaseModel, Field
-from langchain_openai import ChatOpenAI
-
-llm = ChatOpenAI(model="gpt-4o")
+from api.app.functionalities.utils import llm
 
 
 class StructureResponse(BaseModel):
