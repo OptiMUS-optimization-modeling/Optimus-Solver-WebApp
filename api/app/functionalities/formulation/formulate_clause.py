@@ -1,7 +1,7 @@
 import json
 from pydantic.v1 import BaseModel, Field
 import importlib
-from api.app.functionalities.utils import get_llm
+from api.app.functionalities.utils import get_structured_llm
 
 
 class Variable(BaseModel):
@@ -33,7 +33,7 @@ class FormulatedClause(BaseModel):
 
 def formulate_clause(data, model="gpt-4o"):
 
-    structured_llm = get_llm(model).with_structured_output(FormulatedClause)
+    structured_llm = get_structured_llm(FormulatedClause, model)
     clause_type = data["clauseType"]
     parameters = data["parameters"]
     variables = data["variables"]
