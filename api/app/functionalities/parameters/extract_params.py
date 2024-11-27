@@ -21,7 +21,7 @@ Take a deep breath and tackle the problem step by step.
 
 
 from pydantic.v1 import BaseModel, Field
-from api.app.functionalities.utils import llm
+from api.app.functionalities.utils import get_llm
 from api.app.functionalities.parameters.structure_detection import detect_structure
 
 
@@ -46,11 +46,8 @@ class FormattedProblem(BaseModel):
     background: str = Field(description="A 2-3 sentence summary of the problem.")
 
 
-structured_llm = llm.with_structured_output(FormattedProblem)
-
-
-def extract_params(data):
-
+def extract_params(data, model="gpt-4o"):
+    structured_llm = get_llm(model).with_structured_output(FormattedProblem)
     description = data["problemDescription"]
     problem_type, explanation = detect_structure(description)
     prompt = prompt_template.format(description=description)

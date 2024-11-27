@@ -17,7 +17,7 @@ Take a deep breath, and solve the problem step by step.
 """
 
 from pydantic.v1 import BaseModel, Field
-from api.app.functionalities.utils import llm
+from api.app.functionalities.utils import get_llm
 from api.app.utils.misc import get_unique_id
 
 
@@ -31,10 +31,8 @@ class ExtractedClauses(BaseModel):
     objective: str = Field(description="Objective of the problem")
 
 
-structured_llm = llm.with_structured_output(ExtractedClauses)
-
-
-def extract_clauses(data):
+def extract_clauses(data, model="gpt-4o"):
+    structured_llm = get_llm(model).with_structured_output(ExtractedClauses)
     formatted_description = data["formattedDescription"]
 
     prompt = prompt_template.format(

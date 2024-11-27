@@ -1,7 +1,7 @@
 import json
 from pydantic.v1 import BaseModel, Field
 import importlib
-from api.app.functionalities.utils import llm
+from api.app.functionalities.utils import get_llm
 
 
 class CodeFix(BaseModel):
@@ -11,10 +11,7 @@ class CodeFix(BaseModel):
     code: str = Field(description="The new fixed version of the code")
 
 
-structured_llm = llm.with_structured_output(CodeFix)
-
-
-def fix_code(data):
+def fix_code(data, model="gpt-4o"):
     code = data["code"]
     error_message = data["error_message"]
     solver = data["solver"]
@@ -36,7 +33,7 @@ def fix_code(data):
         code=code,
         error_message=error_message,
     )
-
+    structured_llm = get_llm(model).with_structured_output(CodeFix)
     res = structured_llm.invoke(prompt)
 
     output = {

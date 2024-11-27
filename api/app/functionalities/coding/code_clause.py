@@ -2,7 +2,7 @@ import json
 from pydantic.v1 import BaseModel, Field
 import importlib
 
-from api.app.functionalities.utils import llm
+from api.app.functionalities.utils import get_llm
 
 
 class CodeClause(BaseModel):
@@ -12,10 +12,8 @@ class CodeClause(BaseModel):
     )
 
 
-structured_llm = llm.with_structured_output(CodeClause)
-
-
-def code_clause(data):
+def code_clause(data, model="gpt-4o"):
+    structured_llm = get_llm(model).with_structured_output(CodeClause)
     clause_type = data["clauseType"]
     clause = data["clause"]
     related_variables = data["relatedVariables"]

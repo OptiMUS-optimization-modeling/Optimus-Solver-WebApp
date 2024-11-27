@@ -84,10 +84,8 @@ Here is the problem description
 Note that the problem description does not have to match any of the problem types. If it does not match any of the problem types, please just use NA. Only propose a problem type if you are confident that the problem description matches the problem type.
 """
 
-(gp.quicksum(LaborRequired[p] * ProductQuantity[p] for p in range(P)) <= TotalLabor, name="labor_constraint")
-
 from pydantic.v1 import BaseModel, Field
-from api.app.functionalities.utils import llm
+from api.app.functionalities.utils import get_llm
 
 
 class StructureResponse(BaseModel):
@@ -99,10 +97,8 @@ class StructureResponse(BaseModel):
     )
 
 
-structured_llm = llm.with_structured_output(StructureResponse)
-
-
-def detect_structure(description):
+def detect_structure(description, model="gpt-4o"):
+    structured_llm = get_llm(model).with_structured_output(StructureResponse)
 
     prompt = prompt_template.format(description=description)
     res = structured_llm.invoke(prompt)
