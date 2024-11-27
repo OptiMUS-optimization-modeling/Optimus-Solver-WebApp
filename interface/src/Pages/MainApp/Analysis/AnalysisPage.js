@@ -61,8 +61,9 @@ const AnalysisContainer = ({
       setIsLoading(false);
       setIsAnyLoading(false);
       document.getElementById("my_modal_2").close();
-
-      setCurrentStep(1);
+      setTimeout(() => {
+        setCurrentStep(1);
+      }, 1000); // 500 milliseconds delay
     };
 
     let errorCallback = (error) => {
