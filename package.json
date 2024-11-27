@@ -3,6 +3,6 @@
     "interface/node_modules"
   ],
   "scripts": {
-    "heroku-postbuild": "echo 'Starting heroku postbuild...' && cd interface && npm install && echo 'NPM install completed.' && npm run build && echo 'Build completed.'"
+    "heroku-postbuild": "echo 'Starting heroku postbuild...' && cd interface && npm ci  --only=prod && echo 'NPM ci completed.' && npm run build && echo 'Build completed.'"
   }
 }
