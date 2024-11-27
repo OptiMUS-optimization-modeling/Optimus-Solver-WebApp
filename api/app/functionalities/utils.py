@@ -5,7 +5,7 @@ import os
 def get_llm(model="gpt-4o"):
     if model in ["gpt-4o", "gpt-4o-mini"]:
         return ChatOpenAI(model=model)
-    elif model in ["meta-llama/Meta-Llama-3.1-70B-Instruct-Turbo"]:
+    elif model in ["meta-llama/Meta-Llama-3.1-70B-Instruct-Turbo", "meta-llama/Meta-Llama-3.1-405B-Instruct-Turbo"]:
         if (
             not os.environ["TOGETHER_API_KEY"]
             or len(os.environ["TOGETHER_API_KEY"]) == 0
