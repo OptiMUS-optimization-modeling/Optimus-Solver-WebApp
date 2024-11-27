@@ -16,6 +16,10 @@ from auto_testing_helper_functions.auto_testing_helper_functions_gurobipy import
 ### Helper functions
 def testing_for_one(state, dir):
    
+   
+   model = "meta-llama/Meta-Llama-3.1-405B-Instruct-Turbo"
+   # model = "gpt-4o"
+   
    test_dir = os.path.join(dir, f"test_results")
    if not os.path.exists(test_dir):
       os.makedirs(test_dir)
@@ -38,7 +42,7 @@ def testing_for_one(state, dir):
       param[1]["definition"] = param[1].pop("description")
 
    ## State 2: Get objective and constraints (in text)
-   state.update(extract_clauses(state))
+   state.update(extract_clauses(state, model="meta-llama/Meta-Llama-3.1-70B-Instruct-Turbo"))
 
    ## State 3-1: Get objectice formulation (in latex)
    obj_data_latex = {
@@ -49,7 +53,7 @@ def testing_for_one(state, dir):
       "background": state["background"],
       "solver": state["solver"]
    }
-   obj_data_latex.update(formulate_clause(obj_data_latex))
+   obj_data_latex.update(formulate_clause(obj_data_latex, model=model))
    obj_data_latex["clause"].update({"formulation": obj_data_latex["formulation"]})
    state["variables"].update(obj_data_latex["new_variables"])
 
@@ -64,7 +68,7 @@ def testing_for_one(state, dir):
          "background": state["background"],
          "solver": state["solver"]
       }
-      cons_data_latex.update(formulate_clause(cons_data_latex))
+      cons_data_latex.update(formulate_clause(cons_data_latex, model=model))
       cons_data_latex["clause"].update({"formulation": cons_data_latex["formulation"]})
       state["variables"].update(cons_data_latex["new_variables"])
       cons_data_latex_list.append(cons_data_latex.copy())
@@ -84,7 +88,7 @@ def testing_for_one(state, dir):
       obj_data_code["relatedParameters"][p] = state["parameters"][p]
       obj_data_code["relatedParameters"][p].update({"symbol": p})
 
-   obj_data_code.update(code_clause(obj_data_code))
+   obj_data_code.update(code_clause(obj_data_code, model=model))
 
    ## State 4-2: Get constraints code (in python)
    cons_data_code_list = []
@@ -103,7 +107,7 @@ def testing_for_one(state, dir):
          cons_data_code["relatedParameters"][p] = state["parameters"][p]
          cons_data_code["relatedParameters"][p].update({"symbol": p})
          
-      cons_data_code.update(code_clause(cons_data_code))
+      cons_data_code.update(code_clause(cons_data_code, model=model))
       cons_data_code_list.append(cons_data_code.copy())
 
    ## State 5: Symthsize the code
