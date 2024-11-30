@@ -102,45 +102,68 @@ const TestingPage = ({
         console.log("Run Success:", JSON.stringify(data, null, 2));
         setIsRunLoading(false);
         if (data.run_result.success === false) {
-          let error_str =
-            "ERROR: " +
-            data.run_result.error_message +
-            '\n at "' +
-            data.run_result.error_line +
-            '"\n';
-
-          if (error_str) {
-            setResults(error_str);
-          }
-
+          let error_str = (
+            <div>
+              <p>{data.run_result.error_message}</p>
+              <p>------</p>
+              <p>Traceback:</p>
+              <p>{data.run_result.error_traceback}</p>
+            </div>
+          );
+          setResults(error_str);
           updateProject();
-
-          return;
         } else {
-          let log_str = (
+          console.log(
+            "data.run_result.solving_info:",
+            data.run_result.solving_info.objective_value,
+            data.run_result.solving_info.objective_value === null
+          );
+          let log_str = null;
+          console.log("COMPT ", data.run_result.solving_info.objective_value);
+
+          log_str = (
             <div className="overflow-y-auto">
               <p>Run Successful!</p>
               <p>------</p>
-              <p>Objective Value: {data.run_result.obj_val.toFixed(4)}</p>
-              <p>Runtime: {data.run_result.solving_info.runtime.toFixed(4)}s</p>
-              <p>
-                Iteration Count: {data.run_result.solving_info.iteration_count}
-              </p>
-              <p>------</p>
-              <p>Variables:</p>
-              <ul>
-                {data.run_result.solving_info.variables.map((variable) => {
-                  return (
-                    <li>
-                      {variable.symbol}: {variable.value.toFixed(4)}
-                    </li>
-                  );
-                })}
-              </ul>
+              <p>Status: {data.run_result.solving_info.status}</p>
+              {data.run_result.solving_info.objective_value &&
+                data.run_result.solving_info.objective_value !== null && (
+                  <div>
+                    <p>
+                      Objective Value:{" "}
+                      {data.run_result.solving_info.objective_value.toFixed(4)}
+                    </p>
+                    <p>
+                      Runtime: {data.run_result.solving_info.runtime.toFixed(4)}
+                      s
+                    </p>
+                    <p>
+                      Iteration Count:{" "}
+                      {data.run_result.solving_info.iteration_count}
+                    </p>
+                    <p>------</p>
+                    <p>Variables:</p>
+                    <ul>
+                      {data.run_result.solving_info.variables.map(
+                        (variable) => {
+                          return (
+                            <li key={variable.symbol}>
+                              {variable.symbol}: {variable.value.toFixed(4)}
+                            </li>
+                          );
+                        }
+                      )}
+                    </ul>
+                  </div>
+                )}
             </div>
           );
+
           setResults(log_str);
+          updateProject();
         }
+
+        console.log("Run Results:", results);
       })
       .catch((error) => {
         setIsRunLoading(false);
@@ -230,11 +253,7 @@ const TestingPage = ({
           <div className="code-box w-full bg-base-300 border rounded-box p-4 mt-2">
             <AceEditor
               mode="python"
-              theme={
-                isRunLoading || isFixLoading || isSynthesizeLoading
-                  ? "tomorrow_night"
-                  : theme
-              }
+              theme={"tomorrow_night"}
               readOnly={isRunLoading || isFixLoading || isSynthesizeLoading}
               name="test"
               editorProps={{ $blockScrolling: true }}
@@ -250,13 +269,9 @@ const TestingPage = ({
           <div className="flex flex-col w-full">
             <h1 className="text-xl mb-2">Results</h1>
             <div className="result-box border rounded-box p-4 mt-2 text-sm overflow-y-auto mockup-code w-full">
-              <code className="overflow-y-auto">{results}</code>
-            </div>
-          </div>
-          <div className="flex flex-col w-full">
-            <h1 className="text-xl mb-2 mt-10">OptiMUS Log</h1>
-            <div className="result-box w-full bg-base-300 border rounded-box p-4 mt-2 flex justify-center items-center">
-              <h1>Will be added soon!</h1>
+              <code className="overflow-y-auto ">
+                {isRunLoading ? "Running..." : results}
+              </code>
             </div>
           </div>
         </div>

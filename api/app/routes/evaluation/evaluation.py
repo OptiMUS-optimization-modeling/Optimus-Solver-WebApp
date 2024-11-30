@@ -13,6 +13,7 @@ with open("{data_json_path}", "r") as f:
 get_info_code = """
 # Get solver information
 solving_info = {}
+
 if status == gp.GRB.OPTIMAL:
     solving_info["status"] = model.status
     solving_info["objective_value"] = model.objVal
@@ -25,8 +26,22 @@ if status == gp.GRB.OPTIMAL:
     ]
     solving_info["runtime"] = model.Runtime
     solving_info["iteration_count"] = model.IterCount
-    
-
+else:
+    status_dict = {
+        gp.GRB.INFEASIBLE: "Infeasible",
+        gp.GRB.INF_OR_UNBD: "Infeasible or Unbounded",
+        gp.GRB.UNBOUNDED: "Unbounded",
+        gp.GRB.OPTIMAL: "Optimal",
+    }
+    solving_info["status"] = (
+        status_dict[model.status] + f" ({model.status})"
+        if model.status in status_dict
+        else status_dict[model.status]
+    )
+    solving_info["objective_value"] = None
+    solving_info["variables"] = []
+    solving_info["runtime"] = None
+    solving_info["iteration_count"] = None
 """
 
 
@@ -213,11 +228,6 @@ def piece_code_together(state: Dict, interpret: bool = False):
         if interpret:
             exec(last_line, local_env, local_env)
 
-        last_line = f"\n# Get objective value\nobj_val = model.objVal\n"
-        code += last_line + "\n"
-        if interpret:
-            exec(last_line, local_env, local_env)
-
         if interpret:
             ret = {
                 "success": True,
@@ -373,10 +383,6 @@ def get_full_code():
 @login_required
 @check_project_ownership
 def get_run_results():
-    # parameters = request.json["parameters"]
-    # constraints = request.json["constraints"]
-    # objective = request.json["objective"]
-    # variables = request.json["variables"]
 
     print("SSSS")
     data = request.json["data"]
@@ -387,12 +393,6 @@ def get_run_results():
     project = db.collection("projects").document(project_id)
     project.update({"code": code})
     solver = project.get().to_dict().get("solver", "none")
-
-    # code = project_data.get("code", "")
-    # parameters = project_data.get("parameters", {})
-    # constraints = project_data.get("constraints", {})
-    # objective = project_data.get("objective", {})
-    # variables = project_data.get("variables", {})
 
     # if tmp folder doesn't exist, create it
     if not os.path.exists("tmpData/"):
@@ -412,27 +412,9 @@ def get_run_results():
         print("TMP", tmp)
 
     state = {
-        # "parameters": parameters,
-        # "constraints": constraints,
-        # "objective": objective,
-        # "variables": variables,
         "solver": solver,
         "data_json_path": f"{path}/data.json",
     }
-
-    # print(json.dumps(state, indent=4))
-
-    # try:
-    # state = prep_problem_json(state)
-    # run_result = piece_code_together(
-    #     state,
-    #     interpret=True,
-    # )
-    # run_result = piece_code_together(state, interpret=True)
-
-    # except Exception as e:
-    #     code = "ERROR!: " + str(e)
-    #     print(e)
 
     run_result = run_code(code, data)
 
@@ -451,60 +433,6 @@ def get_solver_import_code(solver):
         return solver_list[solver]["import_code"]
     else:
         raise Exception(f"Solver {solver} is not supported yet!")
-
-    # def fix_code(parameters, variables, constraints, objective, solver, data):
-    bogus_context = None
-    target_type = None
-
-    for c in constraints:
-        if "status" in c and c["status"] == "bogus":
-            bogus_context = c
-            target_type = "constraint"
-            break
-    for o in objective:
-        if "status" in o and o["status"] == "bogus":
-            bogus_context = o
-            target_type = "objective"
-            break
-    for v in variables:
-        if "status" in v and v["status"] == "bogus":
-            bogus_context = v
-            target_type = "variable"
-            break
-
-    if not bogus_context:
-        return {
-            "parameters": parameters,
-            "variables": variables,
-            "constraints": constraints,
-            "objective": objective,
-            "bug_explanation": "No bug found!",
-        }
-
-    prompt = fix_prompt.format(
-        targetType=target_type,
-        error_line=bogus_context["code"],
-        error_message=bogus_context["error_message"],
-    )
-
-    output = get_llm_response(prompt)
-    output = output.split("```json")[1].split("```")[0].strip()
-
-    print(output)
-    output = json.loads(output)
-    bogus_context["status"] = "fixed"
-    bogus_context["code"] = output["fixed_code"]
-
-    return {
-        "parameters": parameters,
-        "variables": variables,
-        "constraints": constraints,
-        "objective": objective,
-        "bug_explanation": output["bug explanation"],
-    }
-
-
-# import datetime
 
 
 @bp.route("/updateCode", methods=["POST"])
@@ -563,11 +491,6 @@ def handle_fix_code():
     code = rj["code"]
     error_message = rj["error_message"]
 
-    # print("HERHERHER", user_id, project_id, param_data, code)
-
-    # print(
-    #     f"Fixing code for project {project_id} with user {user_id},\ncode: {code}\nerror_message: {error_message}"
-    # )
     return handle_request_async(
         fix_code_wrapper,
         user_id,
