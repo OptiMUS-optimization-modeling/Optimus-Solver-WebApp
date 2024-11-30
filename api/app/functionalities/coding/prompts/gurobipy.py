@@ -45,6 +45,44 @@ Take a deep breath, and solve the problem step by step.
 """
 
 
+import_code = "import gurobipy as gp"
+
+
+get_info_code = """
+# Get solver information
+solving_info = {}
+
+if status == gp.GRB.OPTIMAL:
+    solving_info["status"] = model.status
+    solving_info["objective_value"] = model.objVal
+    solving_info["variables"] = [
+        {
+            "symbol": var.VarName,
+            "value": var.X,
+        }
+        for var in model.getVars()
+    ]
+    solving_info["runtime"] = model.Runtime
+    solving_info["iteration_count"] = model.IterCount
+else:
+    status_dict = {
+        gp.GRB.INFEASIBLE: "Infeasible",
+        gp.GRB.INF_OR_UNBD: "Infeasible or Unbounded",
+        gp.GRB.UNBOUNDED: "Unbounded",
+        gp.GRB.OPTIMAL: "Optimal",
+    }
+    solving_info["status"] = (
+        status_dict[model.status] + f" ({model.status})"
+        if model.status in status_dict
+        else status_dict[model.status]
+    )
+    solving_info["objective_value"] = None
+    solving_info["variables"] = []
+    solving_info["runtime"] = None
+    solving_info["iteration_count"] = None
+"""
+
+
 def generate_variable_code(symbol, type, shape):
     if not shape or len(shape) == 0:
         return f"{symbol} = model.addVar(name='{symbol}', vtype=gp.GRB.{type.upper()})"
