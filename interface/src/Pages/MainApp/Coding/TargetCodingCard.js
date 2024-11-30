@@ -83,13 +83,28 @@ const TargetCodingCard = ({
             <div className="mt-2 flex items-center justify-between">
               <span className="text-xs mr-2">
                 Confidence:{" "}
-                <span className="font-bold">{target.codingConfidence}/5</span>
+                <span className="font-bold">
+                  {target.codingConfidence
+                    ? target.codingConfidence
+                    : isLoading
+                    ? null
+                    : "?"}
+                  /5
+                </span>
               </span>
               <progress
                 className={`progress w-1/2 progress-${getScoreColor(
                   target.codingConfidence
                 )}`}
-                value={target.codingConfidence}
+                value={
+                  isLoading
+                    ? null
+                    : target.codingConfidence
+                    ? target.codingConfidence
+                    : isAnyLoading
+                    ? null
+                    : 0
+                }
                 max="5"
               ></progress>
             </div>
