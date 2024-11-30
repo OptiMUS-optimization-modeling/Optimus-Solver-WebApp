@@ -48,6 +48,7 @@ Take a deep breath, and solve the problem step by step.
 import_code = "import gurobipy as gp"
 
 
+# This code is used to get the solver information after the model is run. It should support all status (OPTIMAL, INFEASIBLE, UNBOUNDED, etc.) and store the objective value, variables, runtime, and iteration count in the solving_info dictionary.
 get_info_code = """
 # Get solver information
 solving_info = {}
@@ -83,7 +84,18 @@ else:
 """
 
 
-def generate_variable_code(symbol, type, shape):
+from typing import List
+
+
+# This code is used to generate the code to add a variable to the model.
+def generate_variable_code(symbol: str, type: str, shape: List[int]):
+    """
+    symbol: The symbol of the variable to add.
+    type: The type of the variable to add. One of "CONTINUOUS", "INTEGER", "BINARY".
+    shape: The shape of the variable to add. An empty list if scalar, otherwise a list of symbols of scalar parameters as dimensions
+    """
+
+    print(f"symbol: {symbol}, type: {type}, shape: {shape}")
     if not shape or len(shape) == 0:
         return f"{symbol} = model.addVar(name='{symbol}', vtype=gp.GRB.{type.upper()})"
     else:
