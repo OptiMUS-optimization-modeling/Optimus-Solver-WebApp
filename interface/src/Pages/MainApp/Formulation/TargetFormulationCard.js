@@ -67,13 +67,26 @@ const TargetFormulationCard = ({
         <div className="mt-2 flex items-center justify-between">
           <span className="text-xs mr-2">
             Confidence:{" "}
-            <span className="font-bold">{target.formulationConfidence}/5</span>
+            <span className="font-bold">
+              {target.formulationConfidence
+                ? target.formulationConfidence
+                : "?"}
+              /5
+            </span>
           </span>
           <progress
             className={`progress w-1/2 progress-${getScoreColor(
               target.formulationConfidence
             )}`}
-            value={target.formulationConfidence}
+            value={
+              isLoading
+                ? null
+                : target.formulationConfidence
+                ? target.formulationConfidence
+                : isAnyLoading
+                ? null
+                : 0
+            }
             max="5"
           ></progress>
         </div>

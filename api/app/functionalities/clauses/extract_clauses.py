@@ -17,7 +17,7 @@ Take a deep breath, and solve the problem step by step.
 """
 
 from pydantic.v1 import BaseModel, Field
-from api.app.functionalities.utils import get_llm
+from api.app.functionalities.utils import get_structured_llm
 from api.app.utils.misc import get_unique_id
 
 
@@ -32,7 +32,7 @@ class ExtractedClauses(BaseModel):
 
 
 def extract_clauses(data, model="gpt-4o"):
-    structured_llm = get_llm(model).with_structured_output(ExtractedClauses)
+    structured_llm = get_structured_llm(ExtractedClauses, model)
     formatted_description = data["formattedDescription"]
 
     prompt = prompt_template.format(

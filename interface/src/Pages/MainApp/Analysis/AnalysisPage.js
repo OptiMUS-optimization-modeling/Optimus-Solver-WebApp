@@ -58,10 +58,10 @@ const AnalysisContainer = ({
     let callback = (data) => {
       console.log("Success:", data);
       updateProject();
-      setIsLoading(false);
-      setIsAnyLoading(false);
-      document.getElementById("my_modal_2").close();
       setTimeout(() => {
+        setIsLoading(false);
+        setIsAnyLoading(false);
+        document.getElementById("my_modal_2").close();
         setCurrentStep(1);
       }, 1000); // 500 milliseconds delay
     };

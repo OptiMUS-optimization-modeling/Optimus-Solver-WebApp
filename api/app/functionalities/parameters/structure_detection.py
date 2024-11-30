@@ -85,7 +85,7 @@ Note that the problem description does not have to match any of the problem type
 """
 
 from pydantic.v1 import BaseModel, Field
-from api.app.functionalities.utils import get_llm
+from api.app.functionalities.utils import get_structured_llm
 
 
 class StructureResponse(BaseModel):
@@ -98,7 +98,7 @@ class StructureResponse(BaseModel):
 
 
 def detect_structure(description, model="gpt-4o"):
-    structured_llm = get_llm(model).with_structured_output(StructureResponse)
+    structured_llm = get_structured_llm(StructureResponse, model)
 
     prompt = prompt_template.format(description=description)
     res = structured_llm.invoke(prompt)
