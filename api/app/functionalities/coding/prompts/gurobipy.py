@@ -54,7 +54,7 @@ get_info_code = """
 solving_info = {}
 
 if status == gp.GRB.OPTIMAL:
-    solving_info["status"] = model.status
+    solving_info["status"] = "Optimal (2)"
     solving_info["objective_value"] = model.objVal
     solving_info["variables"] = [
         {

@@ -180,7 +180,7 @@ const ParametersPage = ({
         <h1 className="text-xl mx-2">Parameters</h1>
         <div
           className="tooltip"
-          data-tip="Edit the parameters if needed. Click next after adding all the parameters."
+          data-tip="Shape must be a list of symbols of scalar parameters (e.g. [] for a scalar, ['M', 'N'] for a 2D array where M and N are scalar parameters)."
         >
           <div className="fa fa-info-circle fa-lg"></div>
         </div>
