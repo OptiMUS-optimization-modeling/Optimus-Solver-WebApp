@@ -126,21 +126,24 @@ const TestingPage = ({
               <p>Run Successful!</p>
               <p>------</p>
               <p>Status: {data.run_result.solving_info.status}</p>
-              {data.run_result.solving_info.objective_value &&
-                data.run_result.solving_info.objective_value !== null && (
+              {data.run_result.solving_info?.objective_value != null && (
+                <>
                   <div>
                     <p>
                       Objective Value:{" "}
                       {data.run_result.solving_info.objective_value.toFixed(4)}
                     </p>
+
                     <p>
                       Runtime: {data.run_result.solving_info.runtime.toFixed(4)}
-                      s
                     </p>
+
                     <p>
                       Iteration Count:{" "}
                       {data.run_result.solving_info.iteration_count}
                     </p>
+                  </div>
+                  <div>
                     <p>------</p>
                     <p>Variables:</p>
                     <ul>
@@ -155,7 +158,8 @@ const TestingPage = ({
                       )}
                     </ul>
                   </div>
-                )}
+                </>
+              )}
             </div>
           );
 

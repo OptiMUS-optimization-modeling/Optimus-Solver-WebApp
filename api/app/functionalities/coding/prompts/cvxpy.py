@@ -37,14 +37,16 @@ constraints.append(SalesVolumes <= MaxProductionVolumes)
 Take a deep breath, and solve the problem step by step.
 """
 
+import_code = "import cvxpy as cp"
+
 
 def generate_variable_code(symbol, type, shape):
     type = type.upper()
     params = []
-    if type == 'INTEGER':
-        params.append('integer=True')
-    elif type == 'BINARY':
-        params.append('boolean=True')
+    if type == "INTEGER":
+        params.append("integer=True")
+    elif type == "BINARY":
+        params.append("boolean=True")
     if shape:
         if len(shape) == 1:
             shape_str = shape[0]

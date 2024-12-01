@@ -45,7 +45,57 @@ Take a deep breath, and solve the problem step by step.
 """
 
 
-def generate_variable_code(symbol, type, shape):
+import_code = "import gurobipy as gp"
+
+
+# This code is used to get the solver information after the model is run. It should support all status (OPTIMAL, INFEASIBLE, UNBOUNDED, etc.) and store the objective value, variables, runtime, and iteration count in the solving_info dictionary.
+get_info_code = """
+# Get solver information
+solving_info = {}
+
+if status == gp.GRB.OPTIMAL:
+    solving_info["status"] = "Optimal (2)"
+    solving_info["objective_value"] = model.objVal
+    solving_info["variables"] = [
+        {
+            "symbol": var.VarName,
+            "value": var.X,
+        }
+        for var in model.getVars()
+    ]
+    solving_info["runtime"] = model.Runtime
+    solving_info["iteration_count"] = model.IterCount
+else:
+    status_dict = {
+        gp.GRB.INFEASIBLE: "Infeasible",
+        gp.GRB.INF_OR_UNBD: "Infeasible or Unbounded",
+        gp.GRB.UNBOUNDED: "Unbounded",
+        gp.GRB.OPTIMAL: "Optimal",
+    }
+    solving_info["status"] = (
+        status_dict[model.status] + f" ({model.status})"
+        if model.status in status_dict
+        else status_dict[model.status]
+    )
+    solving_info["objective_value"] = None
+    solving_info["variables"] = []
+    solving_info["runtime"] = None
+    solving_info["iteration_count"] = None
+"""
+
+
+from typing import List
+
+
+# This code is used to generate the code to add a variable to the model.
+def generate_variable_code(symbol: str, type: str, shape: List[int]):
+    """
+    symbol: The symbol of the variable to add.
+    type: The type of the variable to add. One of "CONTINUOUS", "INTEGER", "BINARY".
+    shape: The shape of the variable to add. An empty list if scalar, otherwise a list of symbols of scalar parameters as dimensions
+    """
+
+    print(f"symbol: {symbol}, type: {type}, shape: {shape}")
     if not shape or len(shape) == 0:
         return f"{symbol} = model.addVar(name='{symbol}', vtype=gp.GRB.{type.upper()})"
     else:

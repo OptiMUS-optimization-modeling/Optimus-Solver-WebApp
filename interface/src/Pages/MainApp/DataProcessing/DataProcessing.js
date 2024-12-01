@@ -78,11 +78,11 @@ const DataProcessingPage = ({
             if (typeof value === "number") {
               return null;
             } else {
-              return "Not a number!";
+              return "Must be a number!";
             }
           }
           if (!Array.isArray(value)) {
-            return "Not an array!";
+            return "Must be an array!";
           }
           if (value.length !== parsedData[shape[0]]) {
             return `Incorrect shape! Dimension is ${value.length} instead of ${

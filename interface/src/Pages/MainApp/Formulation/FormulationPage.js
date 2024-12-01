@@ -279,6 +279,12 @@ const FormulationPage = ({
             <div class="flex flex-col w-full">
               <div class="divider divider-start">
                 <h1 className="text-xl mb-2">Variables</h1>
+                <div
+                  className="tooltip"
+                  data-tip="Shape must be a list of symbols of scalar parameters (e.g. [] for a scalar, ['M', 'N'] for a 2D array where M and N are scalar parameters)."
+                >
+                  <div className="fa fa-info-circle fa-lg"></div>
+                </div>
               </div>
             </div>
             <div
