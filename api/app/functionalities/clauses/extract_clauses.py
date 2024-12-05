@@ -16,9 +16,40 @@ You should read and understand the problem and identify 1) implicit constraints 
 Take a deep breath, and solve the problem step by step.
 """
 
+redundancy_prompt_template = """
+You are an expert in optimization modeling and constraint analysis. You are provided with a list of constraints for a problem extracted by your colleague. Here is the problem description:
+
+{problem_description}
+
+Your task is to identify any redundant constraints within the list and provide a final list with the redundant constraints removed.
+
+Constraints:
+{constraints}
+
+Please list only the non-redundant constraints in the same natural language format.
+"""
+
 from pydantic.v1 import BaseModel, Field
 from api.app.functionalities.utils import get_structured_llm
 from api.app.utils.misc import get_unique_id
+
+
+class FinalConstraints(BaseModel):
+    implicit_constraints: list[str] = Field(
+        description="Final list of implicit constraints"
+    )
+    explicit_constraints: list[str] = Field(
+        description="Final list of explicit constraints"
+    )
+
+
+def remove_redundant_constraints(constraints, problem_description, model="gpt-4o"):
+    structured_llm = get_structured_llm(FinalConstraints, model)
+    prompt = redundancy_prompt_template.format(
+        problem_description=problem_description,
+        constraints=constraints,
+    )
+    return structured_llm.invoke(prompt)
 
 
 class ExtractedClauses(BaseModel):
@@ -39,6 +70,17 @@ def extract_clauses(data, model="gpt-4o"):
         formatted_description=formatted_description,
     )
     extracted_clauses = structured_llm.invoke(prompt)
+
+    all_constraints = (
+        extracted_clauses.explicit_constraints + extracted_clauses.implicit_constraints
+    )
+    final_constraints = remove_redundant_constraints(
+        all_constraints, formatted_description, model
+    )
+
+    print("final_constraints: ", final_constraints)
+    extracted_clauses.explicit_constraints = final_constraints.explicit_constraints
+    extracted_clauses.implicit_constraints = final_constraints.implicit_constraints
 
     output = {
         "constraints": {},

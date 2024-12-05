@@ -3,6 +3,65 @@ from pydantic.v1 import BaseModel, Field
 import importlib
 from api.app.functionalities.utils import get_structured_llm
 
+unit_check_prompt = """
+You are an expert in optimization modeling. Here is a high-level summary of an optimization problem we are trying to solve:
+
+-----
+{background}
+-----
+
+Here is a list of parameters that someone has extracted from the original description:
+
+-----
+{params}
+-----
+
+And here is a list of variables defined:
+
+-----
+{vars}
+-----
+
+Consider the formulation of this constraint:
+
+-----
+{targetConstraint}
+-----
+
+To define this constraint, we have defined these new variables:
+
+-----
+{new_vars}
+-----
+
+
+- What are the units for each side of the constraint? Are they consistent with each other?
+
+Based on that, update the formulation if needed. Leave it intact if it is correct.
+
+"""
+
+
+class UpdatedFormulation(BaseModel):
+    formulation: str = Field(
+        description="The updated Latex formulation of the clause, if the original formulation is incorrect"
+    )
+
+
+def check_formulation(
+    background, params, vars, targetConstraint, new_vars, model="gpt-4o"
+):
+    structured_llm = get_structured_llm(UpdatedFormulation, model)
+    prompt = unit_check_prompt.format(
+        background=background,
+        params=params,
+        vars=vars,
+        targetConstraint=targetConstraint,
+        new_vars=new_vars,
+    )
+    res = structured_llm.invoke(prompt)
+    return res.formulation
+
 
 class Variable(BaseModel):
     definition: str = Field(description="Definition of the variable")
@@ -26,6 +85,9 @@ class FormulatedClause(BaseModel):
     variables_used: list[str] = Field(
         description="The list of variables (including the newly-defined ones) that are used in the clause"
     )
+    auxiliary_constraints_formulations: list[str] = Field(
+        description="The formulations of the auxiliary constraints defined on the variables used in the clause, if"
+    )
     formulationConfidence: int = Field(
         description="From 1 to 5, how confident are you that the formulation is correct?"
     )
@@ -33,6 +95,7 @@ class FormulatedClause(BaseModel):
 
 def formulate_clause(data, model="gpt-4o"):
 
+    print("data: ", data)
     structured_llm = get_structured_llm(FormulatedClause, model)
     clause_type = data["clauseType"]
     parameters = data["parameters"]
@@ -81,6 +144,19 @@ def formulate_clause(data, model="gpt-4o"):
     )
 
     res = structured_llm.invoke(prompt)
+
+    if clause_type == "constraint":
+        updated_formulation = check_formulation(
+            background,
+            parameters,
+            variables,
+            res.formulation,
+            res.new_variables,
+        )
+        print("Old formulation: ", res.formulation)
+        print("Updated formulation: ", updated_formulation)
+        res.formulation = updated_formulation
+    print("res: ", res)
 
     output = {
         "formulation": res.formulation,

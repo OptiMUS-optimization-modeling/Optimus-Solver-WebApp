@@ -20,9 +20,45 @@ Take a deep breath and tackle the problem step by step.
 """
 
 
+remove_redundant_params_prompt_template = """
+You are an expert mathematical modeler and an optimization professor at a top university. Here is the problem description for an optimization problem:
+
+-----
+{description}
+-----
+
+And here is a list of parameters that someone has extracted from the description:
+
+-----
+{params}
+-----
+
+Consider parameter "{targetParam}". Is the value of it already known or not? Based on that, how confident are you that this is a parameter (from 1 to 5)?
+"""
+
+
 from pydantic.v1 import BaseModel, Field
 from api.app.functionalities.utils import get_structured_llm
 from api.app.functionalities.parameters.structure_detection import detect_structure
+
+
+class ParameterConfidence(BaseModel):
+    confidence: int = Field(
+        description="The confidence level (from 1 to 5) that the proposed parameter is a actually a parameter in the context of the given optimization problem."
+    )
+
+
+def check_parameters_confidence(params, description, model="gpt-4o"):
+    final_params = []
+    for param in params:
+        structured_llm = get_structured_llm(ParameterConfidence, model)
+        prompt = remove_redundant_params_prompt_template.format(
+            description=description, params=params, targetParam=param
+        )
+        res = structured_llm.invoke(prompt)
+        if res.confidence >= 3:
+            final_params.append(param)
+    return final_params
 
 
 class Parameter(BaseModel):
@@ -53,6 +89,8 @@ def extract_params(data, model="gpt-4o"):
     prompt = prompt_template.format(description=description)
     res = structured_llm.invoke(prompt)
 
+    params = check_parameters_confidence(res.parameters, description, model)
+
     output = {
         "parameters": {
             p.symbol: {
@@ -60,7 +98,7 @@ def extract_params(data, model="gpt-4o"):
                 "shape": p.shape,
                 "value": p.value,
             }
-            for p in res.parameters
+            for p in params
         },
         "formattedDescription": res.formattedDescription,
         "background": res.background,
