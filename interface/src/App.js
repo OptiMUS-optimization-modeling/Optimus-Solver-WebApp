@@ -30,19 +30,24 @@ function App() {
 
   const auth = getAuth();
   const [currentUser, setCurrentUser] = useState(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
-      if (user) {
-        setCurrentUser(user); // User is signed in
-      } else {
-        setCurrentUser(null); // User is signed out
-      }
+      setCurrentUser(user);
+      setLoading(false);
     });
 
-    // Cleanup subscription on unmount
     return () => unsubscribe();
   }, [auth]);
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="loading loading-spinner loading-lg"></div>
+      </div>
+    );
+  }
 
   return (
     <Router>
@@ -52,7 +57,7 @@ function App() {
         isDark={isDark}
         setIsDark={setIsDark}
       />
-      <AuthHandler>
+      <AuthHandler currentUser={currentUser}>
         <Routes>
           <Route path="/" element={<Navigate to="/dashboard" />} />
           <Route

@@ -53,7 +53,7 @@ function Dashboard({ user, isDark, setIsDark }) {
   };
 
   return (
-    <div className="flex, w-full flex flex-col justify-center items-center">
+    <div className="flex w-full flex-col justify-center items-center">
       <div className="card w-4/5 my-10">
         <div className="overflow-x-auto">
           <table className="table">
@@ -104,6 +104,7 @@ function Dashboard({ user, isDark, setIsDark }) {
                 <th className="text-success hover:opacity-80">
                   <i className="fas fa-plus"></i> New Project
                 </th>
+                <td></td>
                 <td></td>
                 <td></td>
               </tr>

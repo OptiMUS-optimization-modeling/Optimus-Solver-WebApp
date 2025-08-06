@@ -1,32 +1,20 @@
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { onAuthStateChanged } from "firebase/auth";
-import { auth } from "../../Services/firebaseConfig";
 
-const AuthHandler = ({ children }) => {
+const AuthHandler = ({ children, currentUser }) => {
   let navigate = useNavigate();
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
-      console.log("User:", user);
-      if (
-        !user &&
-        !["/login", "/signup", "/terms-of-service", "/privacy-policy"].includes(
-          window.location.pathname
-        )
-      ) {
-        navigate("/login");
-      } else if (
-        user &&
-        ["/login", "/signup"].includes(window.location.pathname)
-      ) {
-        navigate("/dashboard");
-      }
-      console.log("User:", user);
-    });
-
-    return () => unsubscribe();
-  }, [navigate]);
+    const currentPath = window.location.pathname;
+    const publicPaths = ["/login", "/signup", "/terms-of-service", "/privacy-policy"];
+    const authPaths = ["/login", "/signup"];
+    
+    if (!currentUser && !publicPaths.includes(currentPath)) {
+      navigate("/login");
+    } else if (currentUser && authPaths.includes(currentPath)) {
+      navigate("/dashboard");
+    }
+  }, [currentUser, navigate]);
 
   return children;
 };
