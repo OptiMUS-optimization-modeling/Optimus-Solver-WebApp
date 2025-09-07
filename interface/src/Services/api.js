@@ -1,6 +1,6 @@
 const BASE_URL = process.env.REACT_APP_BACKEND_URL;
 
-export const fetchProjects = async (navigate) => {
+export const fetchProjects = async () => {
   try {
     const response = await fetch(`${BASE_URL}/projects/getList`, {
       method: "POST",
@@ -11,14 +11,14 @@ export const fetchProjects = async (navigate) => {
     });
 
     if (response.status === 401) {
-      navigate("/login");
-      return;
+      return null;
     }
 
     const data = await response.json();
     return data.projects;
   } catch (error) {
     console.error("Error fetching projects:", error);
+    return null;
   }
 };
 

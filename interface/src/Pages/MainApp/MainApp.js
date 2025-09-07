@@ -3,25 +3,12 @@ import MainContainer from "./MainContainer.js";
 import React, { useState, useEffect, useCallback } from "react";
 import { useParams } from "react-router-dom";
 
-import { auth } from "../../Services/firebaseConfig.js"; // Adjust the path as necessary
-import { onAuthStateChanged } from "firebase/auth";
+import { useAuth } from "../../Services/AuthContext";
 
 import "./MainApp.css";
 
 function MainApp({ isDark, setIsDark }) {
-  useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
-      if (user) {
-        // User is signed in
-        console.log(user);
-      } else {
-        // User is signed out
-        console.log("User is signed out");
-      }
-    });
-
-    return () => unsubscribe(); // Cleanup subscription
-  }, []);
+  const { status, sessionReady } = useAuth();
   const [currentStep, setCurrentStep] = useState(0);
 
   // get project_id from path="/project/:project_id"
@@ -31,7 +18,8 @@ function MainApp({ isDark, setIsDark }) {
 
   const updateProject = useCallback(async () => {
     try {
-      await new Promise((resolve) => setTimeout(resolve, 500)); // Wait for 0.5 seconds
+      if (status !== "authed" || !sessionReady) return;
+      await new Promise((resolve) => setTimeout(resolve, 200));
       const response = await fetch(
         process.env.REACT_APP_BACKEND_URL + "/projects/getProject",
         {
@@ -51,7 +39,7 @@ function MainApp({ isDark, setIsDark }) {
     } catch (error) {
       console.error("Error fetching project:", error);
     }
-  }, [project_id]);
+  }, [project_id, status, sessionReady]);
 
   useEffect(() => {
     updateProject();

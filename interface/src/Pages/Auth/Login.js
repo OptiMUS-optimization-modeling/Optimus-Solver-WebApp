@@ -6,13 +6,14 @@ import {
   signInWithEmailAndPassword,
   sendPasswordResetEmail,
 } from "firebase/auth";
-import { verifyToken, testAuth } from "../../Services/api";
+import {} from "../../Services/api";
 
 const LoginPage = ({ isDark, setIsDark }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [errMsg, setErrMsg] = useState("");
   const [resetMsg, setResetMsg] = useState("");
+  const [submitting, setSubmitting] = useState(false);
 
   const handleEmailChange = (e) => {
     setEmail(e.target.value);
@@ -55,22 +56,10 @@ const LoginPage = ({ isDark, setIsDark }) => {
       return;
     }
 
+    setSubmitting(true);
     signInWithEmailAndPassword(auth, email, password)
-      .then((userCredential) => {
-        const user = userCredential.user;
-        user.getIdToken().then(async (idToken) => {
-          try {
-            await verifyToken(idToken);
-            const testData = await testAuth();
-            console.log("Test Success:", testData);
-          } catch (error) {
-            if (error.code === "auth/email-already-in-use") {
-              setErrMsg("There is already an account with this email");
-            } else {
-              setErrMsg("Error logging in");
-            }
-          }
-        });
+      .then(() => {
+        // Global auth provider will handle session exchange and navigation
       })
       .catch((error) => {
         console.log("Error logging in:", error.message);
@@ -85,6 +74,7 @@ const LoginPage = ({ isDark, setIsDark }) => {
         } else {
           setErrMsg("Error logging in");
         }
+        setSubmitting(false);
       });
   };
 
@@ -152,8 +142,12 @@ const LoginPage = ({ isDark, setIsDark }) => {
               </div>
 
               <div className="flex justify-center items-center mt-4">
-                <button className="btn btn-primary w-3/4" type="submit">
-                  Log in
+                <button
+                  className="btn btn-primary w-3/4"
+                  type="submit"
+                  disabled={submitting}
+                >
+                  {submitting ? "Logging in..." : "Log in"}
                 </button>
               </div>
 

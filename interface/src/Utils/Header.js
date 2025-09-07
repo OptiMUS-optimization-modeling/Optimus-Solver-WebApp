@@ -3,10 +3,12 @@ import "./Header.css";
 import ThemeController from "./ThemeController";
 import { getAuth, signOut } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "../Services/AuthContext";
 
-const Header = ({ currentUser, setCurrentUser, isDark, setIsDark }) => {
+const Header = ({ isDark, setIsDark }) => {
   const navigate = useNavigate();
   const auth = getAuth();
+  const { user } = useAuth();
 
   const handleLogout = () => {
     signOut(auth)
@@ -35,7 +37,7 @@ const Header = ({ currentUser, setCurrentUser, isDark, setIsDark }) => {
         <div className="flex-1 px-2 mx-2"></div>
         <div className="flex-none hidden lg:block">
           <ul className="menu menu-horizontal">
-            {currentUser && (
+            {user && (
               <li>
                 <button
                   className="btn btn-ghost btn-sm rounded-btn"

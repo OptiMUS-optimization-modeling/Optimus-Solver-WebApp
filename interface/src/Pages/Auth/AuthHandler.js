@@ -1,32 +1,37 @@
 import { useEffect } from "react";
-import { useNavigate } from "react-router-dom";
-import { onAuthStateChanged } from "firebase/auth";
-import { auth } from "../../Services/firebaseConfig";
+import { useLocation, useNavigate } from "react-router-dom";
+import { useAuth } from "../../Services/AuthContext";
 
 const AuthHandler = ({ children }) => {
-  let navigate = useNavigate();
+  const navigate = useNavigate();
+  const location = useLocation();
+  const { user, status, sessionReady } = useAuth();
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
-      console.log("User:", user);
-      if (
-        !user &&
-        !["/login", "/signup", "/terms-of-service", "/privacy-policy"].includes(
-          window.location.pathname
-        )
-      ) {
-        navigate("/login");
-      } else if (
-        user &&
-        ["/login", "/signup"].includes(window.location.pathname)
-      ) {
-        navigate("/dashboard");
-      }
-      console.log("User:", user);
-    });
+    if (status === "loading") return;
+    if (user && !sessionReady) return; // wait until server session is ready
+    const publicPaths = [
+      "/login",
+      "/signup",
+      "/terms-of-service",
+      "/privacy-policy",
+    ];
+    const isPublic = publicPaths.includes(location.pathname);
 
-    return () => unsubscribe();
-  }, [navigate]);
+    if (!user && !isPublic) {
+      navigate("/login", { replace: true });
+    } else if (user && ["/login", "/signup"].includes(location.pathname)) {
+      navigate("/dashboard", { replace: true });
+    }
+  }, [user, status, sessionReady, location, navigate]);
+
+  if (status === "loading" || (user && !sessionReady)) {
+    return (
+      <div className="flex justify-center items-center h-screen">
+        <span className="loading loading-spinner loading-lg"></span>
+      </div>
+    );
+  }
 
   return children;
 };

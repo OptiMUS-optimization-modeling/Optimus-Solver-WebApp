@@ -12,9 +12,9 @@ import AuthHandler from "./Pages/Auth/AuthHandler"; // Import the AuthHandler co
 import Dashboard from "./Pages/Dashboard/Dashboard"; // Your dashboard component
 import { useState, useEffect } from "react";
 import Header from "./Utils/Header.js";
-import { getAuth, onAuthStateChanged } from "firebase/auth";
 import TermsOfService from "./Pages/TermsOfService";
 import PrivacyPolicy from "./Pages/PrivacyPolicy";
+import { AuthProvider } from "./Services/AuthContext";
 
 function App() {
   // ================================================
@@ -28,54 +28,37 @@ function App() {
     localStorage.setItem("isDark", JSON.stringify(isDark));
   }, [isDark]);
 
-  const auth = getAuth();
-  const [currentUser, setCurrentUser] = useState(null);
-
-  useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
-      if (user) {
-        setCurrentUser(user); // User is signed in
-      } else {
-        setCurrentUser(null); // User is signed out
-      }
-    });
-
-    // Cleanup subscription on unmount
-    return () => unsubscribe();
-  }, [auth]);
+  // Auth state handled globally in AuthProvider
 
   return (
-    <Router>
-      <Header
-        currentUser={currentUser}
-        setCurrentUser={setCurrentUser}
-        isDark={isDark}
-        setIsDark={setIsDark}
-      />
-      <AuthHandler>
-        <Routes>
-          <Route path="/" element={<Navigate to="/dashboard" />} />
-          <Route
-            path="/signup"
-            element={<SignupPage isDark={isDark} setIsDark={setIsDark} />}
-          />
-          <Route
-            path="/login"
-            element={<LoginPage isDark={isDark} setIsDark={setIsDark} />}
-          />
-          <Route
-            path="/dashboard"
-            element={<Dashboard isDark={isDark} setIsDark={setIsDark} />}
-          />
-          <Route
-            path="/project/:project_id"
-            element={<MainApp isDark={isDark} setIsDark={setIsDark} />}
-          />
-          <Route path="/terms-of-service" element={<TermsOfService />} />
-          <Route path="/privacy-policy" element={<PrivacyPolicy />} />
-        </Routes>
-      </AuthHandler>
-    </Router>
+    <AuthProvider>
+      <Router>
+        <Header isDark={isDark} setIsDark={setIsDark} />
+        <AuthHandler>
+          <Routes>
+            <Route path="/" element={<Navigate to="/dashboard" />} />
+            <Route
+              path="/signup"
+              element={<SignupPage isDark={isDark} setIsDark={setIsDark} />}
+            />
+            <Route
+              path="/login"
+              element={<LoginPage isDark={isDark} setIsDark={setIsDark} />}
+            />
+            <Route
+              path="/dashboard"
+              element={<Dashboard isDark={isDark} setIsDark={setIsDark} />}
+            />
+            <Route
+              path="/project/:project_id"
+              element={<MainApp isDark={isDark} setIsDark={setIsDark} />}
+            />
+            <Route path="/terms-of-service" element={<TermsOfService />} />
+            <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+          </Routes>
+        </AuthHandler>
+      </Router>
+    </AuthProvider>
   );
 }
 

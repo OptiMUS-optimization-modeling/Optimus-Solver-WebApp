@@ -5,22 +5,30 @@ import {
   createProject,
   deleteProject,
 } from "../../Services/api";
+import { useAuth } from "../../Services/AuthContext";
 
 function Dashboard({ user, isDark, setIsDark }) {
   // get the list of projects on page load
   const [projects, setProjects] = useState([]);
+  const [loading, setLoading] = useState(true);
   let navigate = useNavigate();
   const [newProjectTitle, setNewProjectTitle] = useState("");
   const [deleteProjectId, setDeleteProjectId] = useState("");
+  const { status, sessionReady } = useAuth();
 
   // fetchProjects
   const fetchProjectsCallback = useCallback(async () => {
-    const projects = await fetchProjects(navigate);
+    if (status !== "authed" || !sessionReady) return;
+    setLoading(true);
+    const projects = await fetchProjects();
     if (projects) {
       console.log("Projects:", projects);
       setProjects(projects);
+    } else {
+      setProjects([]);
     }
-  }, [navigate]);
+    setLoading(false);
+  }, [status, sessionReady]);
 
   // setProjects
   useEffect(() => {
@@ -56,59 +64,65 @@ function Dashboard({ user, isDark, setIsDark }) {
     <div className="flex, w-full flex flex-col justify-center items-center">
       <div className="card w-4/5 my-10">
         <div className="overflow-x-auto">
-          <table className="table">
-            {/* head */}
-            <thead>
-              <tr>
-                <th>Project Name</th>
-                <th>Owner</th>
-                <th>Last Updated</th>
-                <th>Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {/* project rows */}
-
-              {projects.map((project) => (
-                <tr key={project.id} className="">
-                  <th
-                    className="cursor-pointer hover:text-primary hover:opacity"
-                    onClick={() => handleProjectClick(project.id)} // Add onClick event handler
-                  >
-                    {project.title}
-                  </th>
-                  <td>{project.owner}</td>
-                  <td>{project.lastUpdated}</td>
-                  <td>
-                    <button
-                      className="btn btn-sm btn-warning"
-                      onClick={() => {
-                        setDeleteProjectId(project.id);
-                        document
-                          .getElementById("delete_confirm_modal")
-                          .showModal();
-                      }}
-                    >
-                      <i className="fas fa-trash-alt"></i>
-                    </button>
-                  </td>
+          {loading ? (
+            <div className="flex justify-center items-center py-8">
+              <span className="loading loading-spinner loading-lg"></span>
+            </div>
+          ) : (
+            <table className="table">
+              {/* head */}
+              <thead>
+                <tr>
+                  <th>Project Name</th>
+                  <th>Owner</th>
+                  <th>Last Updated</th>
+                  <th>Actions</th>
                 </tr>
-              ))}
-              {/* last row for creating new projects */}
-              <tr
-                className="cursor-pointer"
-                onClick={() => {
-                  document.getElementById("new_project_modal").showModal();
-                }}
-              >
-                <th className="text-success hover:opacity-80">
-                  <i className="fas fa-plus"></i> New Project
-                </th>
-                <td></td>
-                <td></td>
-              </tr>
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                {/* project rows */}
+
+                {projects.map((project) => (
+                  <tr key={project.id} className="">
+                    <th
+                      className="cursor-pointer hover:text-primary hover:opacity"
+                      onClick={() => handleProjectClick(project.id)} // Add onClick event handler
+                    >
+                      {project.title}
+                    </th>
+                    <td>{project.owner}</td>
+                    <td>{project.lastUpdated}</td>
+                    <td>
+                      <button
+                        className="btn btn-sm btn-warning"
+                        onClick={() => {
+                          setDeleteProjectId(project.id);
+                          document
+                            .getElementById("delete_confirm_modal")
+                            .showModal();
+                        }}
+                      >
+                        <i className="fas fa-trash-alt"></i>
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+                {/* last row for creating new projects */}
+                <tr
+                  className="cursor-pointer"
+                  onClick={() => {
+                    document.getElementById("new_project_modal").showModal();
+                  }}
+                >
+                  <th className="text-success hover:opacity-80">
+                    <i className="fas fa-plus"></i> New Project
+                  </th>
+                  <td></td>
+                  <td></td>
+                </tr>
+              </tbody>
+            </table>
+          )}
         </div>
       </div>
 
