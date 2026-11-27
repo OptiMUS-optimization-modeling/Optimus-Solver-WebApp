@@ -1,6 +1,6 @@
 # OptiMUS Solver
 
-This repo contains the code for backend and frontend of [OptiMUS Solver Web App](https://optimus-solver.com/). For OptiMUS paper repositories, see [OptiMUS GitHub Repository](https://github.com/teshnizi/OptiMUS).
+This repo contains the code for backend and frontend of [OptiMUS Solver Web App](https://web.stanford.edu/~udell/optimus-solver). For OptiMUS paper repositories, see [OptiMUS GitHub Repository](https://github.com/teshnizi/OptiMUS).
 
 ![image](https://github.com/user-attachments/assets/64837284-6f78-4158-90b3-4dae76e6e426)
 
